@@ -1,20 +1,19 @@
-body,h1,h2,h3 {
-  font-family: 'Montserrat', sans-serif;
+body {
+  background: url("../assets/img/bg-3d.jpg") center/cover fixed;
+  color: #fff;
+  font-family: Arial, sans-serif;
 }
 
-/* PARALLAX */
-.parallax {
-  background: url("../assets/img/bg.jpg") center/cover fixed;
-  height: 100vh;
+.hero {
+  text-align: center;
+  padding: 140px 20px;
 }
 
-/* TOKEN 3D */
 .token-3d {
-  width: 220px;
-  height: 220px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   animation: float 4s ease-in-out infinite;
-  box-shadow: 0 20px 40px rgba(0,0,0,.6);
 }
 
 @keyframes float {
@@ -23,29 +22,41 @@ body,h1,h2,h3 {
   100% {transform: translateY(0)}
 }
 
-/* CARD */
 .card {
-  background: rgba(0,0,0,.7);
-  border-radius: 18px;
-  padding: 28px;
-  color: #fff;
+  background: rgba(0,0,0,.75);
+  padding: 30px;
+  border-radius: 20px;
 }
 
-/* DASHBOARD */
+.slider img {
+  width: 100%;
+  max-height: 420px;
+  border-radius: 16px;
+  transition: transform .6s;
+}
+
+.partners {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 20px;
+}
+
+.partners img {
+  aspect-ratio: 1/1;
+  object-fit: contain;
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(3,1fr);
   gap: 15px;
-  margin: 20px 0;
-}
-
-.actions button {
-  margin: 8px 5px;
 }
 
 input {
   width: 100%;
   padding: 12px;
-  border-radius: 10px;
-  border: none;
+  margin: 10px 0;
 }
