@@ -1,24 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ZILA Presale</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://s3.tradingview.com/tv.js"></script>
 <script src="js/presale.js" defer></script>
 <script src="js/slider.js" defer></script>
+<script src="js/wallet.js" defer></script>
+</head>
+<body>
 
 <section>
-  <div class="card">
-    <img src="assets/img/token.png" class="token">
-    <h2>Presale</h2>
+  <div class="container">
+    <div class="card">
+      <img src="assets/img/token.png" class="token">
+      <h2>Token Calculator</h2>
+      <p>Rate: 1 POL = 1560 ZILA</p>
 
-    <input id="matic" type="number" placeholder="MATIC amount">
-    <p>You Receive: <span id="zila">0</span> ZILA</p>
+      <input id="polAmount" type="number" placeholder="You Send (POL)">
+      <p>You Receive</p>
+      <h3><span id="zilaAmount">0</span> ZILA</h3>
 
-    <button onclick="buy()">Buy ZILA</button>
+      <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+      <button onclick="buyZila()">Buy ZILA</button>
+    </div>
+
+    <br>
+
+    <div class="card">
+      <h3>Polygon Price</h3>
+      <div id="tv_chart" style="height:320px"></div>
+    </div>
   </div>
 </section>
 
+<!-- ECOSYSTEM -->
 <section>
-  <div class="card">
-    <h2>ZILA Ecosystem</h2>
-    <img id="eco" src="assets/img/eco1.jpg" style="width:100%;border-radius:15px">
-    <br><br>
-    <button onclick="prev()">Prev</button>
-    <button onclick="next()">Next</button>
+  <div class="container">
+    <div class="card">
+      <h2>ZILA Ecosystem</h2>
+      <img id="eco" src="assets/img/eco1.jpg" style="width:100%;border-radius:15px">
+      <br><br>
+      <button onclick="prev()">Prev</button>
+      <button onclick="next()">Next</button>
+    </div>
   </div>
 </section>
+
+<script>
+new TradingView.widget({
+  container_id: "tv_chart",
+  symbol: "POLUSDT",
+  interval: "30",
+  theme: "dark",
+  locale: "en",
+  autosize: true
+});
+</script>
+
+</body>
+</html>
