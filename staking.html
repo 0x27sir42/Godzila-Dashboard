@@ -1,35 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<title>ZILA | Staking</title>
-
-<link rel="stylesheet" href="css/style.css">
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
-</head>
-
-<body>
-
-<section class="w3-container w3-padding-64">
+<section>
   <div class="card">
-    <h2>Staking Dashboard</h2>
-
-    <p id="walletAddress">Wallet: Not connected</p>
-
-    <div class="stats">
-      <div>Balance: <span id="balance">0</span> ZILA</div>
-      <div>Staked: <span id="staked">0</span> ZILA</div>
-      <div>Rewards: <span id="rewards">0</span> ZILA</div>
-    </div>
-
-    <input id="stakeAmount" type="number" placeholder="Enter ZILA amount">
-
-    <button onclick="stake()">Stake</button>
-    <button onclick="unstake()">Unstake</button>
-    <button onclick="claim()">Claim</button>
+    <h2>Staking</h2>
+    <p>Balance: 0 ZILA</p>
+    <input type="number" placeholder="Amount">
+    <button>Stake</button>
+    <button>Unstake</button>
   </div>
 </section>
-
-<script src="js/wallet.js"></script>
-<script src="js/staking.js"></script>
-</body>
-</html>
