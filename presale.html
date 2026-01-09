@@ -1,60 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ZILA Presale</title>
+<script src="js/presale.js" defer></script>
+<script src="js/slider.js" defer></script>
 
-  <link rel="stylesheet" href="css/style.css" />
-  <script src="js/wallet.js" defer></script>
-  <script src="js/presale.js" defer></script>
-</head>
-<body>
+<section>
+  <div class="card">
+    <img src="assets/img/token.png" class="token">
+    <h2>Presale</h2>
 
-<header class="topbar">
-  <h1>ZILA</h1>
-  <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
-</header>
+    <input id="matic" type="number" placeholder="MATIC amount">
+    <p>You Receive: <span id="zila">0</span> ZILA</p>
 
-<main class="fullscreen">
-
-  <div class="presale-card">
-
-    <h2>ZILA TOKEN PRESALE</h2>
-    <p class="network">Polygon Network</p>
-
-    <div class="rate">
-      1 MATIC = <b>5,000 ZILA</b>
-    </div>
-
-    <div class="box">
-      <label>You Pay</label>
-      <div class="row">
-        <input id="maticInput" type="number" value="1" min="0" oninput="calculateZila()" />
-        <span>MATIC</span>
-      </div>
-    </div>
-
-    <div class="arrow">↓</div>
-
-    <div class="box">
-      <label>You Receive</label>
-      <div class="result">
-        <span id="zilaOutput">5000</span> ZILA
-      </div>
-    </div>
-
-    <div class="bonus">
-      Bonus: <span id="bonus">+0</span> ZILA
-    </div>
-
-    <button class="buy-btn" onclick="buyZila()">BUY ZILA NOW</button>
-
-    <p class="info">Instant delivery • Secure Polygon Transaction</p>
-
+    <button onclick="buy()">Buy ZILA</button>
   </div>
+</section>
 
-</main>
-
-</body>
-</html>
+<section>
+  <div class="card">
+    <h2>ZILA Ecosystem</h2>
+    <img id="eco" src="assets/img/eco1.jpg" style="width:100%;border-radius:15px">
+    <br><br>
+    <button onclick="prev()">Prev</button>
+    <button onclick="next()">Next</button>
+  </div>
+</section>
