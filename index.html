@@ -1,39 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>ZILA | Web3 Ecosystem</title>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+<title>ZILA</title>
 <link rel="stylesheet" href="css/style.css">
-
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+<script src="js/wallet.js" defer></script>
 </head>
-
 <body>
 
-<div class="w3-top">
-  <div class="w3-bar w3-black">
-    <a href="index.html" class="w3-bar-item w3-button">ZILA</a>
-    <a href="whitepaper.html" class="w3-bar-item w3-button">Whitepaper</a>
-    <a href="presale.html" class="w3-bar-item w3-button">Presale</a>
-    <a href="tokenomics.html" class="w3-bar-item w3-button">Tokenomics</a>
-    <a href="dashboard.html" class="w3-bar-item w3-button">Dashboard</a>
-    <a href="staking.html" class="w3-bar-item w3-button">Staking</a>
+<nav>
+  <a href="index.html">ZILA</a>
+  <a href="whitepaper.html">Whitepaper</a>
+  <a href="presale.html">Presale</a>
+  <a href="tokenomics.html">Tokenomics</a>
+  <a href="staking.html">Staking</a>
+  <a href="claim.html">Claim</a>
+  <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+</nav>
 
-    <button onclick="connectWallet()" class="w3-bar-item w3-button w3-right">
-      Connect Wallet
-    </button>
+<section>
+  <div class="card">
+    <img src="assets/img/token.png" class="token">
+    <h1>ZILA Ecosystem</h1>
+    <p>Stake • Earn • Build on Polygon</p>
   </div>
-</div>
+</section>
 
-<header class="hero">
-  <img src="assets/img/file_0000000027b471fabe94ceb4e047ce59.png" class="token-3d">
-  <h1>ZILA Ecosystem</h1>
-  <p>The Future of Web3 on Polygon</p>
-</header>
-
-<script src="js/wallet.js"></script>
 </body>
 </html>
