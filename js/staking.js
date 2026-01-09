@@ -9,11 +9,10 @@ function updateUI() {
 }
 
 function stake() {
-  const amount = Number(document.getElementById("stakeAmount").value);
-  if (amount > balance || amount <= 0) return alert("Invalid amount");
-
-  balance -= amount;
-  staked += amount;
+  const amt = Number(document.getElementById("stakeAmount").value);
+  if (amt <= 0 || amt > balance) return alert("Invalid amount");
+  balance -= amt;
+  staked += amt;
   updateUI();
 }
 
@@ -25,7 +24,7 @@ function unstake() {
 
 function claim() {
   rewards += staked * 0.05;
-  alert("Rewards claimed!");
+  alert("Rewards claimed");
   updateUI();
 }
 
