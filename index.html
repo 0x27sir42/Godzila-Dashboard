@@ -1,30 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>ZILA | Web3 Dashboard</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZILA | Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- W3.CSS -->
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="css/style.css">
-
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-  <!-- TradingView -->
-  <script src="https://s3.tradingview.com/tv.js"></script>
 </head>
-
 <body class="w3-black">
 
 <!-- NAVBAR -->
 <div class="w3-top">
   <div class="w3-bar w3-black w3-card">
-    <a class="w3-bar-item w3-button w3-red">ZILA</a>
-    <a href="#dashboard" class="w3-bar-item w3-button">Dashboard</a>
+    <a href="index.html" class="w3-bar-item w3-button w3-red">ZILA</a>
+    <a href="whitepaper.html" class="w3-bar-item w3-button">Whitepaper</a>
+    <a href="presale.html" class="w3-bar-item w3-button">Presale</a>
+    <a href="tokenomics.html" class="w3-bar-item w3-button">Tokenomics</a>
     <button onclick="connectWallet()" class="w3-bar-item w3-button w3-green w3-right">
       Connect Wallet
     </button>
@@ -32,65 +26,56 @@
 </div>
 
 <!-- HERO -->
-<header class="parallax w3-display-container">
-  <div class="w3-display-middle w3-center">
-    <img src="assets/img/zila-token.png" class="token-3d">
-    <h1 class="w3-text-white w3-jumbo">ZILA Dashboard</h1>
-    <p class="w3-text-white">Stake • Earn • Claim</p>
-  </div>
+<header class="hero">
+  <img src="assets/img/token.png" class="token-3d">
+  <h1>ZILA Dashboard</h1>
+  <p>Stake • Earn • Claim</p>
 </header>
 
-<!-- PRICE -->
+<!-- ECOSYSTEM SLIDER -->
 <section class="w3-container w3-padding-64">
   <div class="w3-content card">
-    <h2>Live Polygon Price</h2>
-    <div id="tv_chart"></div>
-    <p>
-      Presale: <b>0.0005 POL</b><br>
-      Listing: <b>0.005 POL</b><br>
-      1 POL = <b>1560 ZILA</b>
-    </p>
-  </div>
-</section>
+    <h2>ZILA Ecosystem</h2>
 
-<!-- DASHBOARD -->
-<section id="dashboard" class="w3-container w3-padding-64 w3-light-grey">
-  <div class="w3-content">
-    <div class="card dark">
-      <h1>Staking Dashboard</h1>
-      <p id="walletAddress">Wallet: Not connected</p>
+    <div class="slider">
+      <img id="ecoImage" src="assets/img/eco1.jpg">
+    </div>
 
-      <div class="stats">
-        <div>Balance: <span id="balance">0</span> ZILA</div>
-        <div>Staked: <span id="staked">0</span> ZILA</div>
-        <div>Rewards: <span id="rewards">0</span> ZILA</div>
-      </div>
-
-      <input id="stakeAmount" type="number" placeholder="Enter ZILA amount">
-
-      <div class="actions">
-        <button onclick="stake()" class="w3-button w3-red">Stake</button>
-        <button onclick="unstake()" class="w3-button w3-black">Unstake</button>
-        <button onclick="claim()" class="w3-button w3-green">Claim Rewards</button>
-      </div>
+    <div class="w3-center w3-margin-top">
+      <button onclick="prevEco()" class="w3-button w3-black">◀ Prev</button>
+      <button onclick="nextEco()" class="w3-button w3-red">Next ▶</button>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="w3-container w3-center w3-padding-64">
-  <div class="w3-xlarge">
-    <i class="fa fa-twitter"></i>
-    <i class="fa fa-telegram"></i>
-    <i class="fa fa-discord"></i>
+<!-- STAKING -->
+<section class="w3-container w3-padding-64 w3-light-grey">
+  <div class="w3-content card">
+    <h2>Staking Dashboard</h2>
+    <p id="walletAddress">Wallet: Not connected</p>
+
+    <div class="stats">
+      <div>Balance: <span id="balance">0</span> ZILA</div>
+      <div>Staked: <span id="staked">0</span> ZILA</div>
+      <div>Rewards: <span id="rewards">0</span> ZILA</div>
+    </div>
+
+    <input id="stakeAmount" type="number" placeholder="Enter ZILA amount">
+    <button onclick="stake()" class="w3-button w3-red">Stake</button>
+    <button onclick="unstake()" class="w3-button w3-black">Unstake</button>
+    <button onclick="claim()" class="w3-button w3-green">Claim</button>
   </div>
-  <p class="w3-opacity">© 2026 ZILA Ecosystem</p>
+</section>
+
+<footer class="w3-center w3-padding-32">
+  <i class="fa fa-twitter"></i>
+  <i class="fa fa-telegram"></i>
+  <i class="fa fa-discord"></i>
 </footer>
 
-<!-- JS -->
-<script src="js/price.js"></script>
 <script src="js/wallet.js"></script>
 <script src="js/staking.js"></script>
+<script src="js/slider.js"></script>
 
 </body>
 </html>
