@@ -1,9 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ZILA Staking</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/wallet.js" defer></script>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html">Home</a>
+  <a href="presale.html">Presale</a>
+  <a href="tokenomics.html">Tokenomics</a>
+  <a href="whitepaper.html">Whitepaper</a>
+  <a href="staking.html">Staking</a>
+  <a href="claim.html">Claim</a>
+  <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+</nav>
+
+<!-- STAKING -->
 <section>
   <div class="container">
     <div class="card">
+
       <h2>Staking</h2>
 
-      <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+      <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+
+      <br><br>
 
       <p>Select Lock Period</p>
       <select>
@@ -11,18 +38,23 @@
         <option>12 Months – 10% APR</option>
       </select>
 
-      <input type="number" placeholder="ZILA Amount">
+      <input type="number" placeholder="Enter ZILA Amount">
 
       <button>Stake Now</button>
 
       <hr>
+
       <h3>How to Stake</h3>
       <p>1. Connect your wallet</p>
-      <p>2. Enter ZILA amount</p>
-      <p>3. Select staking period</p>
-      <p>4. Confirm transaction in wallet</p>
+      <p>2. Enter the amount of ZILA</p>
+      <p>3. Choose staking period</p>
+      <p>4. Confirm the transaction in your wallet</p>
 
-      <p>Staking Pool Bonus: +1% of total supply</p>
+      <p><b>Staking Pool Bonus:</b> +1% of total supply allocated to stakers</p>
+
     </div>
   </div>
 </section>
+
+</body>
+  </html>
