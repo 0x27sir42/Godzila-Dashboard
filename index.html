@@ -1,81 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>ZILA | Dashboard</title>
+<title>ZILA | Web3 Ecosystem</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 </head>
-<body class="w3-black">
 
-<!-- NAVBAR -->
+<body>
+
 <div class="w3-top">
-  <div class="w3-bar w3-black w3-card">
-    <a href="index.html" class="w3-bar-item w3-button w3-red">ZILA</a>
+  <div class="w3-bar w3-black">
+    <a href="index.html" class="w3-bar-item w3-button">ZILA</a>
     <a href="whitepaper.html" class="w3-bar-item w3-button">Whitepaper</a>
     <a href="presale.html" class="w3-bar-item w3-button">Presale</a>
     <a href="tokenomics.html" class="w3-bar-item w3-button">Tokenomics</a>
-    <button onclick="connectWallet()" class="w3-bar-item w3-button w3-green w3-right">
+    <a href="dashboard.html" class="w3-bar-item w3-button">Dashboard</a>
+    <a href="staking.html" class="w3-bar-item w3-button">Staking</a>
+
+    <button onclick="connectWallet()" class="w3-bar-item w3-button w3-right">
       Connect Wallet
     </button>
   </div>
 </div>
 
-<!-- HERO -->
 <header class="hero">
   <img src="assets/img/token.png" class="token-3d">
-  <h1>ZILA Dashboard</h1>
-  <p>Stake • Earn • Claim</p>
+  <h1>ZILA Ecosystem</h1>
+  <p>The Future of Web3 on Polygon</p>
 </header>
 
-<!-- ECOSYSTEM SLIDER -->
-<section class="w3-container w3-padding-64">
-  <div class="w3-content card">
-    <h2>ZILA Ecosystem</h2>
-
-    <div class="slider">
-      <img id="ecoImage" src="assets/img/eco1.jpg">
-    </div>
-
-    <div class="w3-center w3-margin-top">
-      <button onclick="prevEco()" class="w3-button w3-black">◀ Prev</button>
-      <button onclick="nextEco()" class="w3-button w3-red">Next ▶</button>
-    </div>
-  </div>
-</section>
-
-<!-- STAKING -->
-<section class="w3-container w3-padding-64 w3-light-grey">
-  <div class="w3-content card">
-    <h2>Staking Dashboard</h2>
-    <p id="walletAddress">Wallet: Not connected</p>
-
-    <div class="stats">
-      <div>Balance: <span id="balance">0</span> ZILA</div>
-      <div>Staked: <span id="staked">0</span> ZILA</div>
-      <div>Rewards: <span id="rewards">0</span> ZILA</div>
-    </div>
-
-    <input id="stakeAmount" type="number" placeholder="Enter ZILA amount">
-    <button onclick="stake()" class="w3-button w3-red">Stake</button>
-    <button onclick="unstake()" class="w3-button w3-black">Unstake</button>
-    <button onclick="claim()" class="w3-button w3-green">Claim</button>
-  </div>
-</section>
-
-<footer class="w3-center w3-padding-32">
-  <i class="fa fa-twitter"></i>
-  <i class="fa fa-telegram"></i>
-  <i class="fa fa-discord"></i>
-</footer>
-
 <script src="js/wallet.js"></script>
-<script src="js/staking.js"></script>
-<script src="js/slider.js"></script>
-
 </body>
 </html>
