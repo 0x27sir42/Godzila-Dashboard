@@ -1,4 +1,4 @@
-let ecoImages = [
+const images = [
   "assets/img/eco1.jpg",
   "assets/img/eco2.jpg",
   "assets/img/eco3.jpg",
@@ -7,12 +7,12 @@ let ecoImages = [
 
 let index = 0;
 
-function nextEco() {
-  index = (index + 1) % ecoImages.length;
-  document.getElementById("ecoImage").src = ecoImages[index];
+function next() {
+  index = (index + 1) % images.length;
+  document.getElementById("eco").src = images[index];
 }
 
-function prevEco() {
-  index = (index - 1 + ecoImages.length) % ecoImages.length;
-  document.getElementById("ecoImage").src = ecoImages[index];
+function prev() {
+  index = (index - 1 + images.length) % images.length;
+  document.getElementById("eco").src = images[index];
 }
