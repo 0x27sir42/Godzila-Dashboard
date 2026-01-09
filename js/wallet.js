@@ -1,10 +1,8 @@
-let provider;
-let signer;
-let userAddress = null;
+let provider, signer, userAddress;
 
 async function connectWallet() {
   if (!window.ethereum) {
-    alert("MetaMask is not installed");
+    alert("MetaMask not installed");
     return;
   }
 
@@ -13,14 +11,6 @@ async function connectWallet() {
   signer = provider.getSigner();
   userAddress = await signer.getAddress();
 
-  // Show connected wallet
-  document.getElementById("walletAddress").innerText =
-    "Connected: " + userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
-
-  // Change button text
-  const btn = document.querySelector(".w3-green");
-  if (btn) btn.innerText = "Connected";
-
-  // Load ZILA balance
-  await loadZilaBalance();
+  const el = document.getElementById("walletAddress");
+  if (el) el.innerText = "Connected: " + userAddress;
 }
