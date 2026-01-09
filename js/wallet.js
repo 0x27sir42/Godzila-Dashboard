@@ -12,7 +12,6 @@ async function connectWallet() {
 
   currentAccount = accounts[0];
 
-  // Update semua tombol connect
   document.querySelectorAll(".connectBtn").forEach(btn => {
     btn.innerText =
       "Connected: " +
