@@ -1,19 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ZILA Claim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/wallet.js" defer></script>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html">Home</a>
+  <a href="presale.html">Presale</a>
+  <a href="tokenomics.html">Tokenomics</a>
+  <a href="whitepaper.html">Whitepaper</a>
+  <a href="staking.html">Staking</a>
+  <a href="claim.html">Claim</a>
+  <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+</nav>
+
+<!-- CLAIM -->
 <section>
   <div class="container">
     <div class="card">
+
       <h2>Claim Rewards</h2>
 
-      <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+      <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
 
-      <p>Available Rewards: 0 ZILA</p>
+      <br><br>
+
+      <p><b>Available Rewards:</b> 0 ZILA</p>
+
       <button>Claim Rewards</button>
 
       <hr>
+
       <h3>How to Claim</h3>
-      <p>1. Connect wallet</p>
-      <p>2. Ensure POL balance for gas fee</p>
-      <p>3. Click claim</p>
-      <p>4. Confirm in wallet</p>
+      <p>1. Connect your wallet</p>
+      <p>2. Make sure you have POL for gas fee</p>
+      <p>3. Click the claim button</p>
+      <p>4. Confirm the transaction in your wallet</p>
+
+      <p><b>Note:</b> Rewards are distributed automatically based on staking duration.</p>
+
     </div>
   </div>
 </section>
+
+</body>
+</html>
