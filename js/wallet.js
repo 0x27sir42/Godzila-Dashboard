@@ -1,4 +1,4 @@
-let provider, signer, userAddress;
+let userAccount = null;
 
 async function connectWallet() {
   if (!window.ethereum) {
@@ -6,11 +6,16 @@ async function connectWallet() {
     return;
   }
 
-  provider = new ethers.providers.Web3Provider(window.ethereum);
-  await provider.send("eth_requestAccounts", []);
-  signer = provider.getSigner();
-  userAddress = await signer.getAddress();
+  const accounts = await ethereum.request({
+    method: "eth_requestAccounts"
+  });
 
-  const el = document.getElementById("walletAddress");
-  if (el) el.innerText = "Connected: " + userAddress;
+  userAccount = accounts[0];
+  document.getElementById("connectBtn").innerText =
+    userAccount.slice(0,6) + "..." + userAccount.slice(-4);
+
+  await ethereum.request({
+    method: "wallet_switchEthereumChain",
+    params: [{ chainId: "0x89" }]
+  });
 }
