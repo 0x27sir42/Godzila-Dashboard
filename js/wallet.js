@@ -1,8 +1,8 @@
-let userAccount = null;
+let currentAccount = null;
 
 async function connectWallet() {
   if (!window.ethereum) {
-    alert("MetaMask not installed");
+    alert("MetaMask is not installed");
     return;
   }
 
@@ -10,12 +10,14 @@ async function connectWallet() {
     method: "eth_requestAccounts"
   });
 
-  userAccount = accounts[0];
-  document.getElementById("connectBtn").innerText =
-    userAccount.slice(0,6) + "..." + userAccount.slice(-4);
+  currentAccount = accounts[0];
 
-  await ethereum.request({
-    method: "wallet_switchEthereumChain",
-    params: [{ chainId: "0x89" }]
+  // Update semua tombol connect
+  document.querySelectorAll(".connectBtn").forEach(btn => {
+    btn.innerText =
+      "Connected: " +
+      currentAccount.slice(0, 6) +
+      "..." +
+      currentAccount.slice(-4);
   });
 }
