@@ -1,76 +1,61 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  color: white;
 }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  color: white;
-  background: url("../assets/img/file_0000000089a07206ba973b71ed36a268.png") no-repeat center center fixed;
-  background-size: cover;
+  background: url("../assets/img/bg.jpg") center/cover no-repeat fixed;
+  min-height: 100vh;
 }
 
-a, p, h1, h2, h3, h4, h5, h6, span, div {
-  color: white !important;
-}
-
-.hero {
-  height: 100vh;
-  text-align: center;
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 15px 30px;
   display: flex;
-  flex-direction: column;
+  gap: 20px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+nav a, nav button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+section {
+  min-height: 100vh;
+  padding: 120px 20px;
+  display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(6px);
-}
-
-.token-3d {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  animation: spin 12s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  from { transform: rotateY(0deg); }
-  to { transform: rotateY(360deg); }
 }
 
 .card {
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
   padding: 30px;
-  border-radius: 16px;
-}
-
-.stats {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0;
-}
-
-input {
+  max-width: 420px;
   width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  background: black;
-  color: white;
-  border: 1px solid white;
+  text-align: center;
 }
 
-.slider img {
-  width: 100%;
-  border-radius: 12px;
+.token {
+  width: 140px;
+  margin: 20px auto;
+  display: block;
 }
 
-.partners {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.partners img {
-  width: 100%;
-  border-radius: 8px;
-  background: white;
+.circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
 }
