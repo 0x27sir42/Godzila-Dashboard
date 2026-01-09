@@ -1,81 +1,41 @@
-/***********************
- * CONFIG (EDIT THIS)
- ***********************/
-const ZILA_TOKEN_ADDRESS = "0xYOUR_ZILA_TOKEN_ADDRESS"; // GANTI
-const ZILA_DECIMALS = 18;
+const ZILA_TOKEN = "0xZILA_TOKEN_ADDRESS";
+const STAKING_CONTRACT = "0xSTAKING_CONTRACT_ADDRESS";
 
-/***********************
- * GLOBAL STATE
- ***********************/
-let zilaContract;
-let walletBalance = 0;
-let staked = 0;
-let rewards = 0;
-
-/***********************
- * ERC20 ABI
- ***********************/
-const ERC20_ABI = [
-  "function balanceOf(address owner) view returns (uint256)"
+const ZILA_ABI = [
+  "function approve(address spender, uint256 amount) public returns (bool)"
 ];
 
-/***********************
- * LOAD REAL BALANCE
- ***********************/
-async function loadZilaBalance() {
-  if (!signer || !userAddress) return;
+const STAKING_ABI = [
+  "function stake(uint256 amount, uint8 lockType) public"
+];
 
-  zilaContract = new ethers.Contract(
-    ZILA_TOKEN_ADDRESS,
-    ERC20_ABI,
-    provider
-  );
+async function stake() {
+  if (!currentAccount) {
+    alert("Please connect wallet first");
+    return;
+  }
 
-  const raw = await zilaContract.balanceOf(userAddress);
-  walletBalance = Number(
-    ethers.utils.formatUnits(raw, ZILA_DECIMALS)
-  );
+  const amount = document.getElementById("stakeAmount").value;
+  if (amount <= 0) {
+    alert("Enter amount");
+    return;
+  }
 
-  updateUI();
-}
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
 
-/***********************
- * UPDATE UI
- ***********************/
-function updateUI() {
-  document.getElementById("balance").innerText = walletBalance.toFixed(2);
-  document.getElementById("staked").innerText = staked.toFixed(2);
-  document.getElementById("rewards").innerText = rewards.toFixed(4);
-}
+  const token = new ethers.Contract(ZILA_TOKEN, ZILA_ABI, signer);
+  const staking = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
 
-/***********************
- * STAKE (DEMO)
- ***********************/
-function stake() {
-  const amt = Number(document.getElementById("stakeAmount").value);
+  const weiAmount = ethers.utils.parseUnits(amount, 18);
 
-  if (amt <= 0) return alert("Invalid amount");
-  if (amt > walletBalance) return alert("Insufficient ZILA balance");
+  // 1️⃣ APPROVE
+  const approveTx = await token.approve(STAKING_CONTRACT, weiAmount);
+  await approveTx.wait();
 
-  walletBalance -= amt;
-  staked += amt;
-  updateUI();
-}
+  // 2️⃣ STAKE
+  const stakeTx = await staking.stake(weiAmount, 1); // 1 = 12 months
+  await stakeTx.wait();
 
-/***********************
- * UNSTAKE
- ***********************/
-function unstake() {
-  walletBalance += staked;
-  staked = 0;
-  updateUI();
-}
-
-/***********************
- * CLAIM (DEMO)
- ***********************/
-function claim() {
-  rewards += staked * 0.05;
-  alert("Rewards claimed");
-  updateUI();
+  alert("Staking successful!");
 }
