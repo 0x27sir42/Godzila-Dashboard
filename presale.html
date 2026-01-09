@@ -1,32 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>ZILA | Presale</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZILA Presale</title>
 
-<link rel="stylesheet" href="css/style.css">
-
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
-<script src="https://s3.tradingview.com/tv.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/wallet.js" defer></script>
+  <script src="js/presale.js" defer></script>
 </head>
-
 <body>
 
-<section class="w3-container w3-padding-64">
-  <div class="card">
-    <img src="assets/img/file_0000000027b471fabe94ceb4e047ce59.png" class="token-3d">
+<header class="topbar">
+  <h1>ZILA</h1>
+  <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+</header>
 
-    <h2>ZILA Presale</h2>
-    <p>Presale Price: 0.0005 POL</p>
-    <p>Listing Price: 0.005 POL</p>
-    <p>1 POL = 1560 ZILA</p>
+<main class="fullscreen">
 
-    <div id="tv_chart"></div>
+  <div class="presale-card">
 
-    <button onclick="connectWallet()">Connect Wallet</button>
+    <h2>ZILA TOKEN PRESALE</h2>
+    <p class="network">Polygon Network</p>
+
+    <div class="rate">
+      1 MATIC = <b>5,000 ZILA</b>
+    </div>
+
+    <div class="box">
+      <label>You Pay</label>
+      <div class="row">
+        <input id="maticInput" type="number" value="1" min="0" oninput="calculateZila()" />
+        <span>MATIC</span>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="box">
+      <label>You Receive</label>
+      <div class="result">
+        <span id="zilaOutput">5000</span> ZILA
+      </div>
+    </div>
+
+    <div class="bonus">
+      Bonus: <span id="bonus">+0</span> ZILA
+    </div>
+
+    <button class="buy-btn" onclick="buyZila()">BUY ZILA NOW</button>
+
+    <p class="info">Instant delivery • Secure Polygon Transaction</p>
+
   </div>
-</section>
 
-<script src="js/tradingview.js"></script>
-<script src="js/wallet.js"></script>
+</main>
+
 </body>
 </html>
