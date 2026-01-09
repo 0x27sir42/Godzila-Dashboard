@@ -1,5 +1,5 @@
 body {
-  background: url("../assets/img/bg.jpg") center/cover fixed no-repeat;
+  background: url("assets/img/file_0000000089a07206ba973b71ed36a268.png") center/cover fixed no-repeat;
   color: white;
   font-family: Arial, sans-serif;
 }
@@ -52,4 +52,45 @@ button {
 
 .circle {
   border-radius: 50%;
+}
+
+section {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 120px 15px;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+}
+
+.card {
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(14px);
+  border-radius: 22px;
+  padding: 30px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 28px;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+p {
+  font-size: 16px;
+}
+
+input, select {
+  font-size: 16px;
+}
+
+button {
+  font-size: 16px;
 }
