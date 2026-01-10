@@ -1,153 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>ZILA Presale</title>
+<title>Presale</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
-
-<style>
-body{
-  background:#0b0b0b;
-  color:#fff;
-  font-family:Arial,Helvetica,sans-serif;
-}
-.card{
-  max-width:420px;
-  margin:120px auto;
-  background:#111;
-  padding:25px;
-  border-radius:16px;
-  box-shadow:0 0 20px rgba(0,255,200,.25);
-}
-button,input{
-  width:100%;
-  margin-top:10px;
-}
-.info{
-  background:#0e0e0e;
-  padding:10px;
-  border-radius:8px;
-  margin-top:12px;
-  font-size:14px;
-}
-</style>
 </head>
 
 <body>
+<div class="navbar">
+  <a href="presale.html">Presale</a>
+  <a href="staking.html">Staking</a>
+  <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+</div>
 
-<!-- NAVBAR -->
-<div class="w3-top">
-  <div class="w3-bar w3-black">
-    <a href="index.html" class="w3-bar-item w3-button">Home</a>
-    <a href="presale.html" class="w3-bar-item w3-button">Presale</a>
-    <a href="staking.html" class="w3-bar-item w3-button">Staking</a>
-    <a href="claim.html" class="w3-bar-item w3-button">Claim</a>
-    <a href="tokenomics.html" class="w3-bar-item w3-button">Tokenomics</a>
-    <a href="whitepaper.html" class="w3-bar-item w3-button">Whitepaper</a>
-    <button class="connectBtn w3-right w3-button w3-green"
-      onclick="connectWallet()">Connect Wallet</button>
+<div class="container">
+  <div class="card">
+    <h2>Presale</h2>
+    <input id="polAmount" oninput="calcZila()" placeholder="POL amount">
+    <p>You receive: <b><span id="zilaAmount">0</span> ZILA</b></p>
+    <button onclick="buyZila()">Buy ZILA</button>
+    <button onclick="claimPresale()">Claim Presale</button>
   </div>
 </div>
 
-<!-- PRESALE -->
-<div class="card">
-  <h2 style="text-align:center">ZILA Presale</h2>
-
-  <p>Rate: <b>1 POL = 1560 ZILA</b></p>
-
-  <input id="polAmount" type="number" placeholder="Enter POL amount">
-  <p>You will receive: <b><span id="zilaAmount">0</span> ZILA</b></p>
-
-  <button class="w3-button w3-red" onclick="buyZila()">Buy ZILA</button>
-
-  <hr>
-
-  <h3>Claim ZILA</h3>
-  <button class="w3-button w3-green" onclick="claimZila()">Claim Tokens</button>
-
-  <div class="info">
-    <b>How Presale Works</b><br>
-    1. Connect wallet<br>
-    2. Enter POL amount<br>
-    3. Confirm transaction<br>
-    4. Claim ZILA after purchase<br><br>
-    Ensure you have POL for gas fee.
-  </div>
-</div>
-
-<script>
-/* ================= CONFIG ================= */
-const PRESALE_CONTRACT = "0x24CD5fc39Fa409C75f14eB9f2FE25f9cbb324Ffb";
-const ZILA_TOKEN = "0x38Cb68B1EA79fE3F426A404d9f0A46f1857967BF";
-const RATE = 1560;
-
-const PRESALE_ABI = [
-  "function buy() payable",
-  "function claim()",
-  "function purchased(address user) view returns(uint256)"
-];
-
-let provider, signer, account, presale;
-
-/* ================= CALCULATOR ================= */
-document.getElementById("polAmount").addEventListener("input",()=>{
-  const pol = document.getElementById("polAmount").value || 0;
-  document.getElementById("zilaAmount").innerText = pol * RATE;
-});
-
-/* ================= CONNECT WALLET ================= */
-async function connectWallet(){
-  if(!window.ethereum){
-    alert("MetaMask not detected");
-    return;
-  }
-  provider = new ethers.providers.Web3Provider(window.ethereum);
-  await provider.send("eth_requestAccounts",[]);
-  signer = provider.getSigner();
-  account = await signer.getAddress();
-
-  presale = new ethers.Contract(PRESALE_CONTRACT,PRESALE_ABI,signer);
-
-  document.querySelectorAll(".connectBtn").forEach(btn=>{
-    btn.innerText = "Connected: " +
-      account.slice(0,6)+"..."+account.slice(-4);
-  });
-}
-
-/* ================= BUY ================= */
-async function buyZila(){
-  if(!account){
-    alert("Connect wallet first");
-    return;
-  }
-  const pol = document.getElementById("polAmount").value;
-  if(pol<=0){
-    alert("Invalid amount");
-    return;
-  }
-
-  const tx = await presale.buy({
-    value: ethers.utils.parseEther(pol)
-  });
-  await tx.wait();
-
-  alert("Purchase successful. Claim your ZILA.");
-}
-
-/* ================= CLAIM ================= */
-async function claimZila(){
-  if(!account){
-    alert("Connect wallet first");
-    return;
-  }
-  const tx = await presale.claim();
-  await tx.wait();
-  alert("ZILA claimed successfully");
-}
-</script>
-
+<script src="js/wallet.js"></script>
+<script src="js/presale.js"></script>
 </body>
 </html>
