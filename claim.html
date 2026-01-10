@@ -1,127 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>ZILA – Claim Rewards</title>
+<title>ZILA Claim</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+
+<style>
+body { background:#0b1c14; color:white; font-family:Arial; padding:40px }
+button { padding:12px 20px; margin:10px 0; font-size:16px }
+</style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <a href="index.html">Home</a>
-  <a href="presale.html">Presale</a>
-  <a href="staking.html">Staking</a>
-  <a href="claim.html">Claim</a>
-  <a href="tokenomics.html">Tokenomics</a>
-  <a href="whitepaper.html">Whitepaper</a>
+<h2>Claim Rewards</h2>
 
-  <button id="connectBtn">Connect Wallet</button>
-</div>
+<button onclick="connectInjected()">Connect MetaMask / Browser Wallet</button>
+<br>
+<button onclick="connectWalletConnect()">Connect WalletConnect (QR)</button>
+<br><br>
+<button onclick="claimRewards()">Claim Rewards</button>
 
-<!-- CONTENT -->
-<div class="container">
-  <div class="card">
-    <h2>Claim Rewards</h2>
-
-    <p id="walletText">Wallet: Not connected</p>
-
-    <button id="claimBtn">Claim Rewards</button>
-
-    <hr>
-
-    <h3>How to Claim</h3>
-    <p>1. Connect wallet</p>
-    <p>2. Ensure POL balance for gas</p>
-    <p>3. Click Claim Rewards</p>
-    <p>4. Confirm transaction in MetaMask</p>
-
-    <hr>
-
-    <h3>History</h3>
-    <ul id="history"></ul>
-  </div>
-</div>
+<p id="status"></p>
 
 <script>
-/* ==============================
+/* =========================
    CONFIG
-================================ */
+========================= */
 const STAKING_CONTRACT = "0x69862631A0E37dDCc22F3ba5153ca12BB0934B43";
 
-/* ==============================
+/* =========================
    STATE
-================================ */
+========================= */
 let provider;
 let signer;
-let userAddress = null;
+let account;
 
-/* ==============================
-   CONNECT WALLET
-================================ */
-document.getElementById("connectBtn").onclick = async () => {
+/* =========================
+   INJECTED WALLET
+========================= */
+async function connectInjected() {
   if (!window.ethereum) {
-    alert("MetaMask not detected");
+    alert("No injected wallet found");
     return;
   }
 
-  try {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-    userAddress = await signer.getAddress();
+  provider = new ethers.providers.Web3Provider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+  signer = provider.getSigner();
+  account = await signer.getAddress();
 
-    document.getElementById("connectBtn").innerText =
-      userAddress.slice(0,6) + "..." + userAddress.slice(-4);
+  document.getElementById("status").innerText =
+    "Connected (Injected): " + account;
+}
 
-    document.getElementById("walletText").innerText =
-      "Wallet: " + userAddress;
+/* =========================
+   WALLETCONNECT
+========================= */
+async function connectWalletConnect() {
+  const wcProvider = new WalletConnectProvider.default({
+    rpc: {
+      137: "https://polygon-rpc.com"
+    }
+  });
 
-  } catch (err) {
-    alert("Wallet connection failed");
-    console.error(err);
-  }
-};
+  await wcProvider.enable();
 
-/* ==============================
-   CLAIM REWARD
-================================ */
-document.getElementById("claimBtn").onclick = async () => {
-  if (!userAddress) {
+  provider = new ethers.providers.Web3Provider(wcProvider);
+  signer = provider.getSigner();
+  account = await signer.getAddress();
+
+  document.getElementById("status").innerText =
+    "Connected (WalletConnect): " + account;
+}
+
+/* =========================
+   CLAIM
+========================= */
+async function claimRewards() {
+  if (!account) {
     alert("Connect wallet first");
     return;
   }
 
-  try {
-    const staking = new ethers.Contract(
-      STAKING_CONTRACT,
-      ["function claim() public"],
-      signer
-    );
+  const staking = new ethers.Contract(
+    STAKING_CONTRACT,
+    ["function claim()"],
+    signer
+  );
 
-    const tx = await staking.claim();
-    addHistory("Claim submitted: " + tx.hash);
+  const tx = await staking.claim();
+  document.getElementById("status").innerText =
+    "Tx sent: " + tx.hash;
 
-    await tx.wait();
-    addHistory("Claim success");
-
-  } catch (err) {
-    alert("Claim failed");
-    console.error(err);
-  }
-};
-
-/* ==============================
-   HISTORY
-================================ */
-function addHistory(text) {
-  const li = document.createElement("li");
-  li.innerText = new Date().toLocaleString() + " — " + text;
-  document.getElementById("history").prepend(li);
+  await tx.wait();
+  document.getElementById("status").innerText =
+    "Claim success";
 }
 </script>
 
