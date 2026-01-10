@@ -1,10 +1,11 @@
+// js/wallet.js
 let provider;
 let signer;
 let currentAccount = null;
 
 async function connectWallet() {
-  if (!window.ethereum) {
-    alert("Please install MetaMask");
+  if (typeof window.ethereum === "undefined") {
+    alert("MetaMask not detected");
     return;
   }
 
@@ -21,9 +22,9 @@ async function connectWallet() {
         currentAccount.slice(-4);
     });
 
-    console.log("Wallet connected:", currentAccount);
+    console.log("CONNECTED:", currentAccount);
   } catch (err) {
-    console.error("Connect wallet error:", err);
-    alert("Wallet connection failed");
+    console.error("CONNECT ERROR:", err);
+    alert("Failed to connect wallet");
   }
 }
