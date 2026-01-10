@@ -1,16 +1,17 @@
-let currentAccount = null;
+let provider;
+let signer;
+let currentAccount;
 
 async function connectWallet() {
   if (!window.ethereum) {
-    alert("MetaMask is not installed");
+    alert("MetaMask not installed");
     return;
   }
 
-  const accounts = await ethereum.request({
-    method: "eth_requestAccounts"
-  });
-
-  currentAccount = accounts[0];
+  provider = new ethers.providers.Web3Provider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+  signer = provider.getSigner();
+  currentAccount = await signer.getAddress();
 
   document.querySelectorAll(".connectBtn").forEach(btn => {
     btn.innerText =
@@ -19,4 +20,6 @@ async function connectWallet() {
       "..." +
       currentAccount.slice(-4);
   });
+
+  console.log("Connected:", currentAccount);
 }
