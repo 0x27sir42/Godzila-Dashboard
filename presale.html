@@ -1,30 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Presale</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="css/style.css">
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+  <meta charset="UTF-8">
+  <title>ZILA Presale</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- ethers -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 </head>
 
 <body>
+
+<!-- NAVBAR -->
 <div class="navbar">
-  <a href="presale.html">Presale</a>
+  <a href="presale.html" class="active">Presale</a>
   <a href="staking.html">Staking</a>
-  <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+
+  <button class="connectBtn" id="connectBtn">
+    Connect Wallet
+  </button>
 </div>
 
+<!-- PRESALE CARD -->
 <div class="container">
   <div class="card">
     <h2>Presale</h2>
-    <input id="polAmount" oninput="calcZila()" placeholder="POL amount">
-    <p>You receive: <b><span id="zilaAmount">0</span> ZILA</b></p>
-    <button onclick="buyZila()">Buy ZILA</button>
-    <button onclick="claimPresale()">Claim Presale</button>
+
+    <p id="walletStatus" class="status">
+      Wallet not connected
+    </p>
+
+    <input
+      id="polAmount"
+      placeholder="POL amount"
+      oninput="calcZila()"
+      disabled
+    >
+
+    <p>
+      You receive:
+      <b><span id="zilaAmount">0</span> ZILA</b>
+    </p>
+
+    <button id="buyBtn" disabled>Buy ZILA</button>
+    <button id="claimBtn" disabled>Claim Presale</button>
   </div>
 </div>
 
+<!-- SCRIPT -->
 <script src="js/wallet.js"></script>
 <script src="js/presale.js"></script>
+
+<script>
+  // Bind buttons
+  document.getElementById("connectBtn").onclick = connectWallet;
+  document.getElementById("buyBtn").onclick = buyZila;
+  document.getElementById("claimBtn").onclick = claimPresale;
+</script>
+
 </body>
 </html>
