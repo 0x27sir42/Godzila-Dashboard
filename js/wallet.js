@@ -14,15 +14,24 @@ async function connectWallet() {
     signer = provider.getSigner();
     currentAccount = await signer.getAddress();
 
-    document.querySelectorAll(".connectBtn").forEach(btn => {
-      btn.innerText =
-        "Connected: " +
-        currentAccount.slice(0, 6) +
-        "..." +
-        currentAccount.slice(-4);
-    });
+    // Update UI
+    document.getElementById("connectBtn").innerText =
+      "Connected: " +
+      currentAccount.slice(0, 6) +
+      "..." +
+      currentAccount.slice(-4);
+
+    document.getElementById("walletStatus").innerText =
+      "Wallet connected";
+
+    // Enable staking UI
+    document.getElementById("lock").disabled = false;
+    document.getElementById("stakeAmount").disabled = false;
+    document.getElementById("stakeBtn").disabled = false;
+    document.getElementById("claimBtn").disabled = false;
 
     console.log("Wallet connected:", currentAccount);
+
   } catch (err) {
     console.error(err);
     alert("Wallet connection failed");
