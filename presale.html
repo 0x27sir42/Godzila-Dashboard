@@ -1,99 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>ZILA Presale</title>
+<title>Presale</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-
-<style>
-body { background:#0b1c14; color:white; font-family:Arial; padding:40px }
-button, input { padding:12px; margin:8px 0; width:100% }
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<h2>ZILA Presale</h2>
+<div class="navbar">
+  <a href="index.html">Home</a>
+  <a href="presale.html">Presale</a>
+  <a href="staking.html">Staking</a>
+  <a href="claim.html">Claim</a>
+  <a href="tokenomics.html">Tokenomics</a>
+  <a href="whitepaper.html">Whitepaper</a>
+  <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+</div>
 
-<button onclick="connectInjected()">Connect MetaMask / Browser Wallet</button>
-<button onclick="connectWalletConnect()">Connect WalletConnect</button>
+<div class="container">
+  <div class="card">
+    <h2>Presale</h2>
 
-<br><br>
+    <input id="polAmount" placeholder="POL amount" oninput="calcZila()">
+    <p>You receive: <b><span id="zilaAmount">0</span> ZILA</b></p>
 
-<input id="pol" placeholder="Min 10 POL">
-<button onclick="buy()">Buy ZILA</button>
-<button onclick="claim()">Claim ZILA</button>
+    <button onclick="buyZila()">Buy ZILA</button>
+  </div>
+</div>
 
-<p id="status"></p>
-
-<script>
-/* ============== CONFIG ============== */
-const PRESALE = "0x24CD5fc39Fa409C75f14eB9f2FE25f9cbb324Ffb";
-
-/* ============== STATE ============== */
-let provider, signer, account;
-
-/* ============== CONNECT ============== */
-async function connectInjected(){
-  if(!window.ethereum) return alert("No wallet");
-  provider = new ethers.providers.Web3Provider(window.ethereum);
-  await provider.send("eth_requestAccounts",[]);
-  signer = provider.getSigner();
-  account = await signer.getAddress();
-  status("Connected: "+short(account));
-}
-
-async function connectWalletConnect(){
-  const wc = new WalletConnectProvider.default({
-    rpc:{137:"https://polygon-rpc.com"}
-  });
-  await wc.enable();
-  provider = new ethers.providers.Web3Provider(wc);
-  signer = provider.getSigner();
-  account = await signer.getAddress();
-  status("Connected: "+short(account));
-}
-
-/* ============== BUY ============== */
-async function buy(){
-  if(!account) return alert("Connect wallet");
-  const pol = document.getElementById("pol").value;
-  if(pol < 10) return alert("Min buy 10 POL");
-
-  const presale = new ethers.Contract(
-    PRESALE,
-    ["function buy() payable"],
-    signer
-  );
-
-  const tx = await presale.buy({
-    value: ethers.utils.parseEther(pol)
-  });
-
-  status("Buy tx: "+tx.hash);
-  await tx.wait();
-  status("Purchase success");
-}
-
-/* ============== CLAIM ============== */
-async function claim(){
-  const presale = new ethers.Contract(
-    PRESALE,
-    ["function claim()"],
-    signer
-  );
-  const tx = await presale.claim();
-  status("Claim tx: "+tx.hash);
-  await tx.wait();
-  status("Claim success");
-}
-
-function status(t){document.getElementById("status").innerText=t}
-function short(a){return a.slice(0,6)+"..."+a.slice(-4)}
-</script>
-
+<script src="js/wallet.js"></script>
+<script src="js/presale.js"></script>
 </body>
 </html>
