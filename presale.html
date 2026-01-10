@@ -1,64 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>ZILA Presale</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- ethers -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 </head>
-
 <body>
 
-<!-- NAVBAR -->
 <div class="navbar">
-  <a href="presale.html" class="active">Presale</a>
-  <a href="staking.html">Staking</a>
-
-  <button class="connectBtn" id="connectBtn">
-    Connect Wallet
-  </button>
+  <div class="nav-left">
+    <a href="index.html">Home</a>
+    <a href="tokenomics.html">Tokenomics</a>
+    <a href="whitepaper.html">Whitepaper</a>
+    <a href="presale.html">Presale</a>
+    <a href="staking.html">Staking</a>
+    <a href="claim.html">Claim</a>
+  </div>
+  <div class="nav-right">
+    <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+  </div>
 </div>
 
-<!-- PRESALE CARD -->
 <div class="container">
   <div class="card">
     <h2>Presale</h2>
 
-    <p id="walletStatus" class="status">
-      Wallet not connected
-    </p>
-
-    <input
-      id="polAmount"
-      placeholder="POL amount"
-      oninput="calcZila()"
-      disabled
-    >
-
-    <p>
-      You receive:
-      <b><span id="zilaAmount">0</span> ZILA</b>
-    </p>
-
-    <button id="buyBtn" disabled>Buy ZILA</button>
-    <button id="claimBtn" disabled>Claim Presale</button>
+    <input id="polAmount" placeholder="Minimum 10 POL">
+    <button onclick="buyZila()">Buy ZILA</button>
+    <button onclick="claimPresale()">Claim</button>
   </div>
 </div>
 
-<!-- SCRIPT -->
 <script src="js/wallet.js"></script>
 <script src="js/presale.js"></script>
-
-<script>
-  // Bind buttons
-  document.getElementById("connectBtn").onclick = connectWallet;
-  document.getElementById("buyBtn").onclick = buyZila;
-  document.getElementById("claimBtn").onclick = claimPresale;
-</script>
-
 </body>
 </html>
