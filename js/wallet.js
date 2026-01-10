@@ -14,21 +14,33 @@ async function connectWallet() {
     signer = provider.getSigner();
     currentAccount = await signer.getAddress();
 
-    // Update UI
-    document.getElementById("connectBtn").innerText =
-      "Connected: " +
-      currentAccount.slice(0, 6) +
-      "..." +
-      currentAccount.slice(-4);
+    // Update semua tombol connect
+    document.querySelectorAll(".connectBtn").forEach(btn => {
+      btn.innerText =
+        "Connected: " +
+        currentAccount.slice(0, 6) +
+        "..." +
+        currentAccount.slice(-4);
+    });
 
-    document.getElementById("walletStatus").innerText =
-      "Wallet connected";
+    // Update status jika ada
+    const status = document.getElementById("walletStatus");
+    if (status) status.innerText = "Wallet connected";
 
-    // Enable staking UI
-    document.getElementById("lock").disabled = false;
-    document.getElementById("stakeAmount").disabled = false;
-    document.getElementById("stakeBtn").disabled = false;
-    document.getElementById("claimBtn").disabled = false;
+    // Enable presale fields
+    if (document.getElementById("polAmount")) {
+      document.getElementById("polAmount").disabled = false;
+      document.getElementById("buyBtn").disabled = false;
+      document.getElementById("claimBtn").disabled = false;
+    }
+
+    // Enable staking fields (kalau di halaman staking)
+    if (document.getElementById("stakeAmount")) {
+      document.getElementById("lock").disabled = false;
+      document.getElementById("stakeAmount").disabled = false;
+      document.getElementById("stakeBtn").disabled = false;
+      document.getElementById("claimBtn").disabled = false;
+    }
 
     console.log("Wallet connected:", currentAccount);
 
