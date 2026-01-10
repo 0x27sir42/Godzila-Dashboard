@@ -1,37 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Staking</title>
+<meta charset="UTF-8">
+<title>ZILA Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="css/style.css">
+
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 </head>
+
 <body>
 
 <!-- NAVBAR -->
-<!-- paste navbar here -->
+<div class="w3-top">
+  <div class="w3-bar w3-black">
+    <a href="index.html" class="w3-bar-item w3-button">Home</a>
+    <a href="presale.html" class="w3-bar-item w3-button">Presale</a>
+    <a href="staking.html" class="w3-bar-item w3-button">Staking</a>
+    <a href="claim.html" class="w3-bar-item w3-button">Claim</a>
+    <a href="tokenomics.html" class="w3-bar-item w3-button">Tokenomics</a>
+    <a href="whitepaper.html" class="w3-bar-item w3-button">Whitepaper</a>
+    <button class="connectBtn w3-button w3-green w3-right" onclick="connectWallet()">Connect Wallet</button>
+  </div>
+</div>
 
-<section class="center">
-  <div class="card big">
-    <h2>Staking</h2>
+<!-- CONTENT -->
+<div class="center">
+  <div class="card">
+
+    <h2 class="title">ZILA Staking</h2>
 
     <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
 
+    <div class="balance">
+      Wallet Balance: <span id="zilaBalance">0</span> ZILA
+    </div>
+
     <select id="lockPeriod">
-      <option value="3">3 Months – 2% APR</option>
-      <option value="12">12 Months – 10% APR</option>
+      <option value="90">3 Months – 2% APR</option>
+      <option value="365">12 Months – 10% APR</option>
     </select>
 
     <input id="stakeAmount" type="number" placeholder="ZILA Amount">
-    <button onclick="stakeZila()">Stake Now</button>
 
-    <hr>
-    <h3>History</h3>
-    <div id="historyList"></div>
+    <button class="btn stake" onclick="stakeZila()">Stake</button>
+    <button class="btn claim" onclick="claimRewards()">Claim Rewards</button>
+
+    <div class="info">
+      <h4>How to Stake</h4>
+      <p>1. Connect wallet</p>
+      <p>2. Enter ZILA amount</p>
+      <p>3. Select lock period</p>
+      <p>4. Confirm transaction</p>
+      <p><b>Bonus:</b> +1% of total supply</p>
+    </div>
+
+    <div class="history">
+      <h4>History</h4>
+      <ul id="historyList"></ul>
+    </div>
+
   </div>
-</section>
+</div>
 
-<script src="js/wallet.js"></script>
-<script src="js/history.js"></script>
-<script src="js/staking.js"></script>
+<script>
+/* CONFIG */
+const STAKING_CONTRACT = "0xfdEF573f03829AED021bA24cE63fd047F673eF05";
+const ZILA_TOKEN = "0xE54c126BfE1cdA9A347F2a35DFAc5a9ca155f9A9";
+
+const stakingABI = [
+  "function stake(uint256,uint256)",
+  "function claim()"
+];
+const erc20ABI = [
+  "function approve(address,uint256) returns(bool)",
+  "function allowance(address,address) view returns(uint256)",
+  "function balanceOf(address) view returns(uint256)"
+];
+
+let currentAccount = null;
+
+async function connectWallet(){
+  if(!window.ethereum) return alert("Install MetaMask");
+  const acc = await ethereum.request({method:"eth_requestAccounts"});
+  currentAccount = acc[0];
+
+  document.querySelectorAll(".connectBtn").forEach(btn=>{
+    btn.innerText = currentAccount.slice(0,6)+"..."+currentAccount.slice(-4);
+  });
+
+  loadBalance();
+}
+
+async function loadBalance(){
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const token = new ethers.Contract(ZILA_TOKEN, erc20ABI, provider);
+  const bal = await token.balanceOf(currentAccount);
+  document.getElementById("zilaBalance").innerText =
+    ethers.utils.formatUnits(bal,18);
+}
+
+async function stakeZila(){
+  if(!currentAccount) return alert("Connect wallet first");
+
+  const amt = document.getElementById("stakeAmount").value;
+  const lock = document.getElementById("lockPeriod").value;
+  if(amt<=0) return alert("Invalid amount");
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const token = new ethers.Contract(ZILA_TOKEN, erc20ABI, signer);
+  const staking = new ethers.Contract(STAKING_CONTRACT, stakingABI, signer);
+
+  const wei = ethers.utils.parseUnits(amt,18);
+  const allowance = await token.allowance(currentAccount,STAKING_CONTRACT);
+
+  if(allowance.lt(wei)){
+    const tx1 = await token.approve(STAKING_CONTRACT,wei);
+    await tx1.wait();
+  }
+
+  const tx2 = await staking.stake(wei,lock);
+  await tx2.wait();
+
+  addHistory("Staked "+amt+" ZILA");
+  loadBalance();
+}
+
+async function claimRewards(){
+  if(!currentAccount) return alert("Connect wallet first");
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const staking = new ethers.Contract(STAKING_CONTRACT, stakingABI, signer);
+
+  const tx = await staking.claim();
+  await tx.wait();
+
+  addHistory("Claimed rewards");
+}
+
+function addHistory(text){
+  const li = document.createElement("li");
+  li.innerText = new Date().toLocaleString()+" - "+text;
+  document.getElementById("historyList").prepend(li);
+}
+</script>
+
 </body>
-</html>
+  </html>
