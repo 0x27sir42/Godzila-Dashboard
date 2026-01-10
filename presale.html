@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ZILA Presale</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/style.css">
+<title>Presale</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+
+<!-- ETHERS HARUS PERTAMA -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 </head>
+
 <body>
 
+<!-- NAVBAR -->
 <div class="navbar">
-  <div class="nav-left">
-    <a href="index.html">Home</a>
-    <a href="tokenomics.html">Tokenomics</a>
-    <a href="whitepaper.html">Whitepaper</a>
-    <a href="presale.html">Presale</a>
-    <a href="staking.html">Staking</a>
-    <a href="claim.html">Claim</a>
-  </div>
-  <div class="nav-right">
-    <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
-  </div>
+  <a href="index.html">Home</a>
+  <a href="presale.html">Presale</a>
+  <a href="staking.html">Staking</a>
+  <a href="claim.html">Claim</a>
+  <a href="tokenomics.html">Tokenomics</a>
+  <a href="whitepaper.html">Whitepaper</a>
+
+  <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
 </div>
 
+<!-- CONTENT -->
 <div class="container">
   <div class="card">
     <h2>Presale</h2>
-
-    <input id="polAmount" placeholder="Minimum 10 POL">
-    <button onclick="buyZila()">Buy ZILA</button>
-    <button onclick="claimPresale()">Claim</button>
+    <input placeholder="POL amount">
+    <button>Buy</button>
   </div>
 </div>
 
+<!-- JS HARUS DI BAWAH -->
 <script src="js/wallet.js"></script>
-<script src="js/presale.js"></script>
+
 </body>
 </html>
