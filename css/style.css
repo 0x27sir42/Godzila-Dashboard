@@ -118,3 +118,58 @@ nav a {
 nav button {
   margin-left: auto;
 }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #fff;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 120px 16px 40px;
+}
+
+.card {
+  background: rgba(0,0,0,0.7);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 0 30px rgba(255,255,255,0.1);
+}
+
+.big {
+  font-size: 18px;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  background: #111;
+  color: #fff;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #fff;
+  color: #000;
+}
+
+hr {
+  margin: 24px 0;
+}
+
+.history-item {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
