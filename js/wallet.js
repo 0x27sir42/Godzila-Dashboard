@@ -3,18 +3,21 @@ let signer;
 let currentAccount = null;
 
 async function connectWallet() {
-  if (!window.ethereum) {
-    alert("MetaMask is not installed");
+  if (typeof window.ethereum === "undefined") {
+    alert(
+      "Wallet not detected.\n\n" +
+      "Please open this website using MetaMask Browser."
+    );
     return;
   }
 
   try {
     provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
+
     signer = provider.getSigner();
     currentAccount = await signer.getAddress();
 
-    // Update semua tombol connect
     document.querySelectorAll(".connectBtn").forEach(btn => {
       btn.innerText =
         "Connected: " +
@@ -23,29 +26,13 @@ async function connectWallet() {
         currentAccount.slice(-4);
     });
 
-    // Update status jika ada
     const status = document.getElementById("walletStatus");
     if (status) status.innerText = "Wallet connected";
 
-    // Enable presale fields
-    if (document.getElementById("polAmount")) {
-      document.getElementById("polAmount").disabled = false;
-      document.getElementById("buyBtn").disabled = false;
-      document.getElementById("claimBtn").disabled = false;
-    }
-
-    // Enable staking fields (kalau di halaman staking)
-    if (document.getElementById("stakeAmount")) {
-      document.getElementById("lock").disabled = false;
-      document.getElementById("stakeAmount").disabled = false;
-      document.getElementById("stakeBtn").disabled = false;
-      document.getElementById("claimBtn").disabled = false;
-    }
-
-    console.log("Wallet connected:", currentAccount);
+    console.log("Connected:", currentAccount);
 
   } catch (err) {
-    console.error(err);
-    alert("Wallet connection failed");
+    console.error("Connect error:", err);
+    alert("User rejected connection or wallet error");
   }
 }
