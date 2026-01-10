@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ZILA Claim</title>
+<title>ZILA – Claim Rewards</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 </head>
@@ -13,77 +12,116 @@
 <body>
 
 <!-- NAVBAR -->
-<div class="w3-top">
-  <div class="w3-bar w3-black">
-    <a href="index.html" class="w3-bar-item w3-button">Home</a>
-    <a href="presale.html" class="w3-bar-item w3-button">Presale</a>
-    <a href="staking.html" class="w3-bar-item w3-button">Staking</a>
-    <a href="claim.html" class="w3-bar-item w3-button">Claim</a>
-    <a href="tokenomics.html" class="w3-bar-item w3-button">Tokenomics</a>
-    <a href="whitepaper.html" class="w3-bar-item w3-button">Whitepaper</a>
-    <button class="connectBtn w3-button w3-green w3-right" onclick="connectWallet()">Connect Wallet</button>
-  </div>
+<div class="navbar">
+  <a href="index.html">Home</a>
+  <a href="presale.html">Presale</a>
+  <a href="staking.html">Staking</a>
+  <a href="claim.html">Claim</a>
+  <a href="tokenomics.html">Tokenomics</a>
+  <a href="whitepaper.html">Whitepaper</a>
+
+  <button id="connectBtn">Connect Wallet</button>
 </div>
 
-<div class="center">
+<!-- CONTENT -->
+<div class="container">
   <div class="card">
+    <h2>Claim Rewards</h2>
 
-    <h2 class="title">Claim Rewards</h2>
+    <p id="walletText">Wallet: Not connected</p>
 
-    <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+    <button id="claimBtn">Claim Rewards</button>
 
-    <button class="btn claim" onclick="claimRewards()">Claim Rewards</button>
+    <hr>
 
-    <div class="info">
-      <h4>How to Claim</h4>
-      <p>1. Connect wallet</p>
-      <p>2. Ensure POL for gas</p>
-      <p>3. Click claim</p>
-      <p>4. Confirm in wallet</p>
-    </div>
+    <h3>How to Claim</h3>
+    <p>1. Connect wallet</p>
+    <p>2. Ensure POL balance for gas</p>
+    <p>3. Click Claim Rewards</p>
+    <p>4. Confirm transaction in MetaMask</p>
 
-    <div class="history">
-      <h4>History</h4>
-      <ul id="historyList"></ul>
-    </div>
+    <hr>
 
+    <h3>History</h3>
+    <ul id="history"></ul>
   </div>
 </div>
 
 <script>
+/* ==============================
+   CONFIG
+================================ */
 const STAKING_CONTRACT = "0x69862631A0E37dDCc22F3ba5153ca12BB0934B43";
-let currentAccount = null;
 
-async function connectWallet(){
-  if(!window.ethereum) return alert("Install MetaMask");
-  const acc = await ethereum.request({method:"eth_requestAccounts"});
-  currentAccount = acc[0];
-  document.querySelectorAll(".connectBtn").forEach(btn=>{
-    btn.innerText = currentAccount.slice(0,6)+"..."+currentAccount.slice(-4);
-  });
-}
+/* ==============================
+   STATE
+================================ */
+let provider;
+let signer;
+let userAddress = null;
 
-async function claimRewards(){
-  if(!currentAccount) return alert("Connect wallet first");
+/* ==============================
+   CONNECT WALLET
+================================ */
+document.getElementById("connectBtn").onclick = async () => {
+  if (!window.ethereum) {
+    alert("MetaMask not detected");
+    return;
+  }
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const staking = new ethers.Contract(
-    STAKING_CONTRACT,
-    ["function claim()"],
-    signer
-  );
+  try {
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner();
+    userAddress = await signer.getAddress();
 
-  const tx = await staking.claim();
-  await tx.wait();
+    document.getElementById("connectBtn").innerText =
+      userAddress.slice(0,6) + "..." + userAddress.slice(-4);
 
-  addHistory("Rewards claimed");
-}
+    document.getElementById("walletText").innerText =
+      "Wallet: " + userAddress;
 
-function addHistory(text){
-  const li=document.createElement("li");
-  li.innerText=new Date().toLocaleString()+" - "+text;
-  document.getElementById("historyList").prepend(li);
+  } catch (err) {
+    alert("Wallet connection failed");
+    console.error(err);
+  }
+};
+
+/* ==============================
+   CLAIM REWARD
+================================ */
+document.getElementById("claimBtn").onclick = async () => {
+  if (!userAddress) {
+    alert("Connect wallet first");
+    return;
+  }
+
+  try {
+    const staking = new ethers.Contract(
+      STAKING_CONTRACT,
+      ["function claim() public"],
+      signer
+    );
+
+    const tx = await staking.claim();
+    addHistory("Claim submitted: " + tx.hash);
+
+    await tx.wait();
+    addHistory("Claim success");
+
+  } catch (err) {
+    alert("Claim failed");
+    console.error(err);
+  }
+};
+
+/* ==============================
+   HISTORY
+================================ */
+function addHistory(text) {
+  const li = document.createElement("li");
+  li.innerText = new Date().toLocaleString() + " — " + text;
+  document.getElementById("history").prepend(li);
 }
 </script>
 
