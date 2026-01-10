@@ -1,47 +1,48 @@
-const ZILA_TOKEN = "0xE54c126BfE1cdA9A347F2a35DFAc5a9ca155f9A9";
-const STAKING_CONTRACT = "PASTE_ALAMAT_STAKING_KAMU";
+const STAKING_ADDRESS = "0x69862631A0E37dDCc22F3ba5153ca12BB0934B43";
+const ZILA_ADDRESS = "0x38Cb68B1EA79fE3F426A404d9f0A46f1857967BF";
 
 const ERC20_ABI = [
-  "function approve(address,uint) returns(bool)"
+  "function approve(address,uint256)",
+  "function allowance(address,address)view returns(uint256)",
+  "function decimals()view returns(uint8)"
 ];
 
 const STAKING_ABI = [
-  "function stake(uint,uint)",
+  "function stake(uint256,uint256,uint256)",
   "function claim()"
 ];
 
-async function stakeZila() {
-  if (!account) return alert("Connect wallet first");
+let token, staking;
 
-  const amount = document.getElementById("stakeAmount").value;
-  const lock = document.getElementById("lockPeriod").value;
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-
-  const token = new ethers.Contract(ZILA_TOKEN, ERC20_ABI, signer);
-  const staking = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
-
-  const wei = ethers.utils.parseUnits(amount, 18);
-
-  await token.approve(STAKING_CONTRACT, wei);
-  await staking.stake(wei, lock);
-
-  addHistory("Staking", `Staked ${amount} ZILA for ${lock} months`);
-  alert("Staking successful");
-  renderHistory();
+async function initStaking() {
+  if (!signer) return;
+  token = new ethers.Contract(ZILA_ADDRESS, ERC20_ABI, signer);
+  staking = new ethers.Contract(STAKING_ADDRESS, STAKING_ABI, signer);
 }
 
-async function claimZila() {
-  if (!account) return alert("Connect wallet first");
+async function stakeZila() {
+  await initStaking();
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const staking = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
+  const amount = document.getElementById("stakeAmount").value;
+  const period = document.getElementById("lock").value;
 
-  await staking.claim();
+  const apr = period === "90" ? 2 : 10;
+  const seconds = period === "90" ? 90*86400 : 365*86400;
 
-  addHistory("Claim", "Rewards claimed");
+  const decimals = await token.decimals();
+  const value = ethers.utils.parseUnits(amount, decimals);
+
+  const allowance = await token.allowance(currentAccount, STAKING_ADDRESS);
+  if (allowance.lt(value)) {
+    await (await token.approve(STAKING_ADDRESS, value)).wait();
+  }
+
+  await (await staking.stake(value, seconds, apr)).wait();
+  alert("Staking success");
+}
+
+async function claimStaking() {
+  await initStaking();
+  await (await staking.claim()).wait();
   alert("Rewards claimed");
-  renderHistory();
 }
