@@ -3,60 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <title>ZILA Presale</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="css/style.css">
-<script src="https://s3.tradingview.com/tv.js"></script>
-<script src="js/presale.js" defer></script>
-<script src="js/slider.js" defer></script>
-<script src="js/wallet.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 </head>
+
 <body>
 
-<section>
-  <div class="container">
-    <div class="card">
-      <img src="assets/img/token.png" class="token">
-      <h2>Token Calculator</h2>
+<!-- NAVBAR -->
+<div class="w3-top">
+  <div class="w3-bar w3-black">
+    <a href="index.html" class="w3-bar-item w3-button">Home</a>
+    <a href="presale.html" class="w3-bar-item w3-button">Presale</a>
+    <a href="staking.html" class="w3-bar-item w3-button">Staking</a>
+    <a href="claim.html" class="w3-bar-item w3-button">Claim</a>
+    <a href="tokenomics.html" class="w3-bar-item w3-button">Tokenomics</a>
+    <a href="whitepaper.html" class="w3-bar-item w3-button">Whitepaper</a>
+    <button class="connectBtn w3-button w3-green w3-right" onclick="connectWallet()">Connect Wallet</button>
+  </div>
+</div>
+
+<div class="center">
+  <div class="card">
+
+    <h2 class="title">ZILA Presale</h2>
+
+    <img src="assets/img/token.png"
+         style="width:130px;margin:auto;display:block;border-radius:50%">
+
+    <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+
+    <input id="polAmount" type="number" placeholder="POL Amount">
+
+    <div class="balance">
+      You Receive: <b><span id="zilaReceive">0</span> ZILA</b>
+    </div>
+
+    <button class="btn stake" onclick="buyZila()">Buy ZILA</button>
+
+    <div class="info">
       <p>Rate: 1 POL = 1560 ZILA</p>
-
-      <input id="polAmount" type="number" placeholder="You Send (POL)">
-      <p>You Receive</p>
-      <h3><span id="zilaAmount">0</span> ZILA</h3>
-
-      <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
-      <button onclick="buyZila()">Buy ZILA</button>
+      <p>Network: Polygon</p>
+      <p>Presale Wallet:<br>
+      <small>0x24CD5fc39Fa409C75f14eB9f2FE25f9cbb324Ffb</small></p>
     </div>
 
-    <br>
-
-    <div class="card">
-      <h3>Polygon Price</h3>
-      <div id="tv_chart" style="height:320px"></div>
+    <div class="history">
+      <h4>History</h4>
+      <ul id="historyList"></ul>
     </div>
+
   </div>
-</section>
-
-<!-- ECOSYSTEM -->
-<section>
-  <div class="container">
-    <div class="card">
-      <h2>ZILA Ecosystem</h2>
-      <img id="eco" src="assets/img/eco1.jpg" style="width:100%;border-radius:15px">
-      <br><br>
-      <button onclick="prev()">Prev</button>
-      <button onclick="next()">Next</button>
-    </div>
-  </div>
-</section>
+</div>
 
 <script>
-new TradingView.widget({
-  container_id: "tv_chart",
-  symbol: "POLUSDT",
-  interval: "30",
-  theme: "dark",
-  locale: "en",
-  autosize: true
+/* ===== CONFIG ===== */
+const PRESALE_WALLET = "0x24CD5fc39Fa409C75f14eB9f2FE25f9cbb324Ffb";
+const RATE = 1560;
+
+let currentAccount = null;
+
+/* ===== CONNECT WALLET ===== */
+async function connectWallet(){
+  if(!window.ethereum) return alert("Please install MetaMask");
+
+  const acc = await ethereum.request({ method:"eth_requestAccounts" });
+  currentAccount = acc[0];
+
+  document.querySelectorAll(".connectBtn").forEach(btn=>{
+    btn.innerText =
+      currentAccount.slice(0,6)+"..."+currentAccount.slice(-4);
+  });
+}
+
+/* ===== CALCULATE ===== */
+document.getElementById("polAmount").addEventListener("input",()=>{
+  const pol = Number(document.getElementById("polAmount").value || 0);
+  document.getElementById("zilaReceive").innerText = pol * RATE;
 });
+
+/* ===== BUY PRESALE ===== */
+async function buyZila(){
+  if(!currentAccount) return alert("Connect wallet first");
+
+  const pol = document.getElementById("polAmount").value;
+  if(pol <= 0) return alert("Invalid POL amount");
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const tx = await signer.sendTransaction({
+    to: PRESALE_WALLET,
+    value: ethers.utils.parseEther(pol)
+  });
+
+  addHistory("Presale purchase: "+pol+" POL");
+  await tx.wait();
+
+  alert("Presale transaction confirmed!");
+}
+
+/* ===== HISTORY ===== */
+function addHistory(text){
+  const li = document.createElement("li");
+  li.innerText = new Date().toLocaleString()+" - "+text;
+  document.getElementById("historyList").prepend(li);
+}
 </script>
 
 </body>
