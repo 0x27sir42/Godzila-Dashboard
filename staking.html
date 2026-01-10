@@ -2,13 +2,41 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ZILA Dashboard</title>
+<title>ZILA Staking</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- W3 CSS -->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="css/style.css">
 
+<!-- Ethers -->
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+
+<style>
+body{
+  background:#0b0b0b;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+}
+.card{
+  max-width:420px;
+  margin:120px auto;
+  background:#111;
+  padding:25px;
+  border-radius:16px;
+  box-shadow:0 0 20px rgba(0,255,200,.25);
+}
+button,select,input{
+  width:100%;
+  margin-top:10px;
+}
+.info{
+  background:#0e0e0e;
+  padding:10px;
+  border-radius:8px;
+  margin-top:12px;
+  font-size:14px;
+}
+</style>
 </head>
 
 <body>
@@ -22,133 +50,133 @@
     <a href="claim.html" class="w3-bar-item w3-button">Claim</a>
     <a href="tokenomics.html" class="w3-bar-item w3-button">Tokenomics</a>
     <a href="whitepaper.html" class="w3-bar-item w3-button">Whitepaper</a>
-    <button class="connectBtn w3-button w3-green w3-right" onclick="connectWallet()">Connect Wallet</button>
+    <button class="connectBtn w3-right w3-button w3-green"
+      onclick="connectWallet()">Connect Wallet</button>
   </div>
 </div>
 
-<!-- CONTENT -->
-<div class="center">
-  <div class="card">
+<!-- STAKING CARD -->
+<div class="card">
+  <h2 style="text-align:center">ZILA Staking</h2>
 
-    <h2 class="title">ZILA Staking</h2>
+  <p>Wallet Balance: <b><span id="balance">0</span> ZILA</b></p>
 
-    <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+  <select id="lockPeriod">
+    <option value="90">3 Months – 2% APR</option>
+    <option value="365">12 Months – 10% APR</option>
+  </select>
 
-    <div class="balance">
-      Wallet Balance: <span id="zilaBalance">0</span> ZILA
-    </div>
+  <input id="stakeAmount" type="number" placeholder="Enter ZILA amount">
 
-    <select id="lockPeriod">
-      <option value="90">3 Months – 2% APR</option>
-      <option value="365">12 Months – 10% APR</option>
-    </select>
+  <button class="w3-button w3-red" onclick="stakeZila()">Stake</button>
+  <button class="w3-button w3-green" onclick="claimRewards()">Claim Rewards</button>
 
-    <input id="stakeAmount" type="number" placeholder="ZILA Amount">
-
-    <button class="btn stake" onclick="stakeZila()">Stake</button>
-    <button class="btn claim" onclick="claimRewards()">Claim Rewards</button>
-
-    <div class="info">
-      <h4>How to Stake</h4>
-      <p>1. Connect wallet</p>
-      <p>2. Enter ZILA amount</p>
-      <p>3. Select lock period</p>
-      <p>4. Confirm transaction</p>
-      <p><b>Bonus:</b> +1% of total supply</p>
-    </div>
-
-    <div class="history">
-      <h4>History</h4>
-      <ul id="historyList"></ul>
-    </div>
-
+  <div class="info">
+    <b>How to Stake</b><br>
+    1. Connect wallet<br>
+    2. Enter ZILA amount<br>
+    3. Select lock period<br>
+    4. Confirm transaction in MetaMask<br><br>
+    APR will be paid after lock period ends.
   </div>
 </div>
 
 <script>
-/* CONFIG */
-const STAKING_CONTRACT = "0xfdEF573f03829AED021bA24cE63fd047F673eF05";
-const ZILA_TOKEN = "0xE54c126BfE1cdA9A347F2a35DFAc5a9ca155f9A9";
+/* ================= CONFIG ================= */
+const STAKING_CONTRACT = "0x69862631A0E37dDCc22F3ba5153ca12BB0934B43";
+const ZILA_TOKEN = "0x38Cb68B1EA79fE3F426A404d9f0A46f1857967BF";
 
-const stakingABI = [
-  "function stake(uint256,uint256)",
+const STAKING_ABI = [
+  "function stake(uint256 amount,uint256 lockPeriod,uint256 apr)",
   "function claim()"
 ];
-const erc20ABI = [
-  "function approve(address,uint256) returns(bool)",
-  "function allowance(address,address) view returns(uint256)",
-  "function balanceOf(address) view returns(uint256)"
+
+const ERC20_ABI = [
+  "function approve(address spender,uint256 amount)",
+  "function allowance(address owner,address spender) view returns(uint256)",
+  "function balanceOf(address owner) view returns(uint256)",
+  "function decimals() view returns(uint8)"
 ];
 
-let currentAccount = null;
+let provider, signer, account, staking, token;
 
+/* ================= CONNECT WALLET ================= */
 async function connectWallet(){
-  if(!window.ethereum) return alert("Install MetaMask");
-  const acc = await ethereum.request({method:"eth_requestAccounts"});
-  currentAccount = acc[0];
+  if(!window.ethereum){
+    alert("MetaMask not detected");
+    return;
+  }
+
+  provider = new ethers.providers.Web3Provider(window.ethereum);
+  await provider.send("eth_requestAccounts",[]);
+  signer = provider.getSigner();
+  account = await signer.getAddress();
+
+  staking = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
+  token = new ethers.Contract(ZILA_TOKEN, ERC20_ABI, signer);
 
   document.querySelectorAll(".connectBtn").forEach(btn=>{
-    btn.innerText = currentAccount.slice(0,6)+"..."+currentAccount.slice(-4);
+    btn.innerText = "Connected: " +
+      account.slice(0,6)+"..."+account.slice(-4);
   });
 
   loadBalance();
 }
 
+/* ================= LOAD BALANCE ================= */
 async function loadBalance(){
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const token = new ethers.Contract(ZILA_TOKEN, erc20ABI, provider);
-  const bal = await token.balanceOf(currentAccount);
-  document.getElementById("zilaBalance").innerText =
-    ethers.utils.formatUnits(bal,18);
+  const decimals = await token.decimals();
+  const bal = await token.balanceOf(account);
+  document.getElementById("balance").innerText =
+    Number(ethers.utils.formatUnits(bal,decimals)).toFixed(2);
 }
 
+/* ================= STAKE ================= */
 async function stakeZila(){
-  if(!currentAccount) return alert("Connect wallet first");
-
-  const amt = document.getElementById("stakeAmount").value;
-  const lock = document.getElementById("lockPeriod").value;
-  if(amt<=0) return alert("Invalid amount");
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-
-  const token = new ethers.Contract(ZILA_TOKEN, erc20ABI, signer);
-  const staking = new ethers.Contract(STAKING_CONTRACT, stakingABI, signer);
-
-  const wei = ethers.utils.parseUnits(amt,18);
-  const allowance = await token.allowance(currentAccount,STAKING_CONTRACT);
-
-  if(allowance.lt(wei)){
-    const tx1 = await token.approve(STAKING_CONTRACT,wei);
-    await tx1.wait();
+  if(!account){
+    alert("Connect wallet first");
+    return;
   }
 
-  const tx2 = await staking.stake(wei,lock);
-  await tx2.wait();
+  const amountInput = document.getElementById("stakeAmount").value;
+  const period = document.getElementById("lockPeriod").value;
 
-  addHistory("Staked "+amt+" ZILA");
+  if(amountInput<=0){
+    alert("Invalid amount");
+    return;
+  }
+
+  const apr = period==="90"?2:10;
+  const lockSeconds = period==="90"?90*86400:365*86400;
+
+  const decimals = await token.decimals();
+  const amount = ethers.utils.parseUnits(amountInput,decimals);
+
+  const allowance = await token.allowance(account,STAKING_CONTRACT);
+  if(allowance.lt(amount)){
+    const txApprove = await token.approve(STAKING_CONTRACT,amount);
+    await txApprove.wait();
+  }
+
+  const txStake = await staking.stake(amount,lockSeconds,apr);
+  await txStake.wait();
+
+  alert("Stake successful");
   loadBalance();
 }
 
+/* ================= CLAIM ================= */
 async function claimRewards(){
-  if(!currentAccount) return alert("Connect wallet first");
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const staking = new ethers.Contract(STAKING_CONTRACT, stakingABI, signer);
-
+  if(!account){
+    alert("Connect wallet first");
+    return;
+  }
   const tx = await staking.claim();
   await tx.wait();
-
-  addHistory("Claimed rewards");
-}
-
-function addHistory(text){
-  const li = document.createElement("li");
-  li.innerText = new Date().toLocaleString()+" - "+text;
-  document.getElementById("historyList").prepend(li);
+  alert("Rewards claimed");
+  loadBalance();
 }
 </script>
 
 </body>
-  </html>
+</html>
