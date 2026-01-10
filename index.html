@@ -1,37 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>ZILA Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<title>ZILA Web3 DApp</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- ethers HARUS -->
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+<!-- UI -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<!-- WEB3 -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+
+<style>
+body{background:#000;color:#fff;margin:0}
+.section{padding:80px 20px;max-width:480px;margin:auto}
+.card{background:#0b1c14;padding:20px;border-radius:14px;margin-bottom:30px}
+button{width:100%;padding:10px;border:0;border-radius:8px;font-weight:bold}
+.connect{background:#00ff9c;color:#000}
+.main{background:#00ccff;color:#000}
+input,select{width:100%;padding:10px;margin:10px 0;border-radius:6px;border:0}
+</style>
 </head>
+
 <body>
 
-<!-- NAVBAR FINAL -->
-<div class="navbar">
-  <div class="nav-left">
-    <a href="index.html">Home</a>
-    <a href="tokenomics.html">Tokenomics</a>
-    <a href="whitepaper.html">Whitepaper</a>
-    <a href="presale.html">Presale</a>
-    <a href="staking.html">Staking</a>
-    <a href="claim.html">Claim</a>
-  </div>
-  <div class="nav-right">
-    <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+<!-- NAVBAR -->
+<div class="w3-top">
+  <div class="w3-bar w3-black">
+    <a class="w3-bar-item w3-button" href="#home">Home</a>
+    <a class="w3-bar-item w3-button" href="#presale">Presale</a>
+    <a class="w3-bar-item w3-button" href="#staking">Staking</a>
+    <a class="w3-bar-item w3-button" href="#claim">Claim</a>
+    <button class="w3-bar-item w3-button w3-right connectBtn connect" onclick="connectInjected()">Connect Wallet</button>
   </div>
 </div>
 
-<div class="container">
+<!-- HOME -->
+<div id="home" class="section">
   <div class="card">
-    <h1>ZILA Ecosystem</h1>
-    <p>Welcome to ZILA official dashboard.</p>
+    <h2>ZILA Dashboard</h2>
+    <p>Polygon Network</p>
+    <button onclick="connectWalletConnect()">WalletConnect (QR)</button>
   </div>
 </div>
 
-<script src="js/wallet.js"></script>
+<!-- PRESALE -->
+<div id="presale" class="section">
+  <div class="card">
+    <h3>Presale</h3>
+    <input id="pol" placeholder="POL amount" oninput="calcZila()">
+    <p>You receive: <b><span id="zila">0</span> ZILA</b></p>
+    <button class="main" onclick="buyZila()">Buy ZILA</button>
+  </div>
+</div>
+
+<!-- STAKING -->
+<div id="staking" class="section">
+  <div class="card">
+    <h3>Staking</h3>
+    <select id="lock">
+      <option value="90">3 Months – 2% APR</option>
+      <option value="365">12 Months – 10% APR</option>
+    </select>
+    <input id="stakeAmt" placeholder="ZILA amount (min 10000)">
+    <button class="main" onclick="stake()">Stake</button>
+  </div>
+</div>
+
+<!-- CLAIM -->
+<div id="claim" class="section">
+  <div class="card">
+    <h3>Claim Rewards</h3>
+    <button class="main" onclick="claim()">Claim</button>
+  </div>
+</div>
+
+<script>
+/* ================= GLOBAL ================= */
+let provider, signer, account;
+const RATE = 1560;
+
+/* ================= CONNECT WALLET (INJECTED) ================= */
+async function connectInjected(){
+  try{
+    if(!window.ethereum) return alert("No injected wallet");
+    await ethereum.request({method:"eth_requestAccounts"});
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    signer = provider.getSigner();
+    account = await signer.getAddress();
+    updateUI();
+  }catch(e){alert("Wallet rejected")}
+}
+
+/* ================= WALLETCONNECT ================= */
+async function connectWalletConnect(){
+  try{
+    const wc = new WalletConnectProvider.default({
+      rpc:{137:"https://polygon-rpc.com"}
+    });
+    await wc.enable();
+    provider = new ethers.providers.Web3Provider(wc);
+    signer = provider.getSigner();
+    account = await signer.getAddress();
+    updateUI();
+  }catch(e){alert("WalletConnect failed")}
+}
+
+/* ================= UI ================= */
+function updateUI(){
+  document.querySelectorAll(".connectBtn").forEach(b=>{
+    b.innerText = account.slice(0,6)+"..."+account.slice(-4);
+  });
+}
+
+/* ================= PRESALE ================= */
+function calcZila(){
+  document.getElementById("zila").innerText =
+    (Number(pol.value)||0)*RATE;
+}
+function buyZila(){
+  if(!account) return alert("Connect wallet");
+  if(pol.value<10) return alert("Minimum 10 POL");
+  alert("Presale TX sent (contract call here)");
+}
+
+/* ================= STAKING ================= */
+function stake(){
+  if(!account) return alert("Connect wallet");
+  if(stakeAmt.value<10000) return alert("Minimum 10,000 ZILA");
+  alert("Stake TX sent (approve + stake)");
+}
+
+/* ================= CLAIM ================= */
+function claim(){
+  if(!account) return alert("Connect wallet");
+  alert("Claim TX sent");
+}
+</script>
+
 </body>
 </html>
