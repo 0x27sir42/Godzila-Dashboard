@@ -1,30 +1,36 @@
-// js/wallet.js
-let provider;
+<script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+
+<script>
+let wcProvider;
+let web3Provider;
 let signer;
-let currentAccount = null;
+let userAddress;
 
 async function connectWallet() {
-  if (typeof window.ethereum === "undefined") {
-    alert("MetaMask not detected");
-    return;
-  }
-
   try {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-    currentAccount = await signer.getAddress();
+    wcProvider = new WalletConnectProvider.default({
+      rpc: {
+        137: "https://polygon-rpc.com"
+      }
+    });
+
+    await wcProvider.enable();
+
+    web3Provider = new ethers.providers.Web3Provider(wcProvider);
+    signer = web3Provider.getSigner();
+    userAddress = await signer.getAddress();
 
     document.querySelectorAll(".connectBtn").forEach(btn => {
       btn.innerText =
-        currentAccount.slice(0, 6) +
-        "..." +
-        currentAccount.slice(-4);
+        userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
     });
 
-    console.log("CONNECTED:", currentAccount);
-  } catch (err) {
-    console.error("CONNECT ERROR:", err);
-    alert("Failed to connect wallet");
+    console.log("Connected:", userAddress);
+
+  } catch (e) {
+    alert("Wallet connection failed");
+    console.error(e);
   }
 }
+</script>
