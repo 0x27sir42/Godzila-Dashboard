@@ -1,38 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Staking</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<title>ZILA | Staking</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<style>
+/* === SAMA PERSIS DENGAN INDEX === */
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
+body{background:#000;color:#fff;min-height:100vh}
+#blackhole-bg{position:fixed;inset:0;z-index:-5}
+.stars,.asteroids,.blackhole{position:absolute;inset:-50%}
+.stars{background:radial-gradient(1px 1px at 10% 20%,#fff,transparent);animation:m 240s linear infinite}
+@keyframes m{to{transform:translate(-400px,-400px)}}
+.asteroids{background:radial-gradient(5px 5px at 30% 40%,#aaa,transparent);animation:s 50s linear infinite}
+.blackhole{top:50%;left:50%;width:520px;height:520px;margin:-260px;border-radius:50%;background:radial-gradient(circle,#000 35%,#fff 45%,transparent 70%);box-shadow:0 0 200px #fff;animation:s 25s linear infinite}
+nav{display:flex;justify-content:space-between;padding:16px 40px;background:rgba(0,0,0,.6)}
+nav a{color:#aaa;text-decoration:none;margin:0 14px}
+nav a:hover{color:#00ffd5}
+section{max-width:1100px;margin:100px auto;padding:40px;background:rgba(255,255,255,.06);border-radius:24px}
+.footer{position:fixed;bottom:0;width:100%;text-align:center;font-size:12px;background:rgba(0,0,0,.6)}
+</style>
 </head>
 
 <body>
+<div id="blackhole-bg"><div class="stars"></div><div class="asteroids"></div><div class="blackhole"></div></div>
 
-<div class="navbar">
+<nav>
+ <strong>ZILA</strong>
+ <div>
   <a href="index.html">Home</a>
   <a href="presale.html">Presale</a>
   <a href="staking.html">Staking</a>
-  <a href="claim.html">Claim</a>
+  <a href="roadmap.html">Roadmap</a>
   <a href="tokenomics.html">Tokenomics</a>
   <a href="whitepaper.html">Whitepaper</a>
-  <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
-</div>
+ </div>
+</nav>
 
-<div class="container">
-  <div class="card">
-    <h2>Staking</h2>
+<section>
+ <h2>Staking</h2>
+ <p style="margin-top:20px">
+ Stake ZILA → Earn ZILA<br>
+ Stake POL → Earn ZILA<br><br>
+ APR: <b>1% / Year</b>
+ </p>
+</section>
 
-    <select id="lock">
-      <option value="90">3 Months – 2% APR</option>
-      <option value="365">12 Months – 10% APR</option>
-    </select>
-
-    <input id="stakeAmount" placeholder="ZILA amount">
-    <button onclick="stake()">Stake</button>
-  </div>
-</div>
-
-<script src="js/wallet.js"></script>
-<script src="js/staking.js"></script>
+<div class="footer">© 2026 ZILA</div>
 </body>
-</html> 2
+</html>
