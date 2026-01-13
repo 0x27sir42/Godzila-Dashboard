@@ -1,17 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ZILA | Tokenomics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
+body{background:#000;color:#fff;min-height:100vh}
+#blackhole-bg{position:fixed;inset:0;z-index:-5}
+.stars,.asteroids,.blackhole{position:absolute;inset:-50%}
+.stars{background:radial-gradient(1px 1px at 10% 20%,#fff,transparent);animation:m 240s linear infinite}
+@keyframes m{to{transform:translate(-400px,-400px)}}
+.asteroids{background:radial-gradient(5px 5px at 30% 40%,#aaa,transparent);animation:s 50s linear infinite}
+.blackhole{top:50%;left:50%;width:520px;height:520px;margin:-260px;border-radius:50%;background:radial-gradient(circle,#000 35%,#fff 45%,transparent 70%);box-shadow:0 0 200px #fff;animation:s 25s linear infinite}
+
+nav{display:flex;justify-content:space-between;padding:16px 40px;background:rgba(0,0,0,.6)}
+nav a{color:#aaa;text-decoration:none;margin:0 14px}
+nav a:hover{color:#00ffd5}
+
+section{
+ max-width:1100px;
+ margin:100px auto;
+ padding:40px;
+ background:rgba(255,255,255,.06);
+ border-radius:24px;
+ box-shadow:0 0 60px rgba(0,255,213,.15);
+}
+
+.footer{position:fixed;bottom:0;width:100%;text-align:center;font-size:12px;background:rgba(0,0,0,.6)}
+</style>
+</head>
+
+<body>
+<div id="blackhole-bg"><div class="stars"></div><div class="asteroids"></div><div class="blackhole"></div></div>
+
+<nav>
+ <strong>ZILA</strong>
+ <div>
+  <a href="index.html">Home</a>
+  <a href="presale.html">Presale</a>
+  <a href="staking.html">Staking</a>
+  <a href="roadmap.html">Roadmap</a>
+  <a href="tokenomics.html">Tokenomics</a>
+  <a href="whitepaper.html">Whitepaper</a>
+ </div>
+</nav>
+
 <section>
-  <div class="container">
-    <div class="card">
-      <img src="assets/img/token.png" class="token circle">
-      <h2>Tokenomics</h2>
-
-      <p>Total Supply: 1,000,000,000 ZILA</p>
-      <p>40% Presale</p>
-      <p>30% Staking</p>
-      <p>20% Ecosystem</p>
-      <p>10% Team</p>
-
-      <hr>
-      <p>Long-term sustainable token economy built on Polygon.</p>
-    </div>
-  </div>
+<h1>Tokenomics</h1>
+<p style="margin-top:20px;line-height:2">
+<b>Total Supply:</b> 1,000,000,000 ZILA<br><br>
+<b>Distribution:</b><br>
+• Staking Rewards — 40%<br>
+• Presale — 20%<br>
+• Ecosystem & Development — 30%<br>
+• Team & Advisors — 10%<br><br>
+<b>Deflation:</b><br>
+Transaction fees are partially burned to reduce supply over time.
+</p>
 </section>
+
+<div class="footer">© 2026 ZILA. All Rights Reserved.</div>
+</body>
+</html>
