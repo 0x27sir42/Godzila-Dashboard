@@ -2,189 +2,92 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ZILA Web3 DApp</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZILA | Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-<!-- STYLE -->
 <style>
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#0b0f14;
-  color:#fff;
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
+body{background:#000;color:#fff;min-height:100vh;overflow-x:hidden}
+
+/* BACKGROUND */
+#blackhole-bg{position:fixed;inset:0;z-index:-5}
+.stars,.asteroids,.blackhole{position:absolute;inset:-50%}
+.stars{
+ background:radial-gradient(1px 1px at 10% 20%,#fff,transparent),
+ radial-gradient(1px 1px at 60% 70%,#fff,transparent);
+ animation:move 240s linear infinite;
+}
+@keyframes move{to{transform:translate(-400px,-400px)}}
+.asteroids{
+ background:radial-gradient(5px 5px at 30% 40%,#aaa,transparent);
+ animation:spin 50s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.blackhole{
+ top:50%;left:50%;width:520px;height:520px;margin:-260px;
+ border-radius:50%;
+ background:radial-gradient(circle,#000 35%,#fff 45%,transparent 70%);
+ box-shadow:0 0 200px #ffffffaa;
+ animation:spin 25s linear infinite;
 }
 
-.navbar{
-  position:fixed;
-  top:0;
-  width:100%;
-  background:#111;
-  display:flex;
-  align-items:center;
-  padding:10px;
-  z-index:1000;
+/* NAV */
+nav{
+ position:sticky;top:0;
+ display:flex;justify-content:space-between;
+ padding:16px 40px;
+ background:rgba(0,0,0,.6);
+ backdrop-filter:blur(18px);
+}
+nav a{color:#aaa;text-decoration:none;margin:0 14px}
+nav a:hover{color:#00ffd5}
+
+/* CONTENT */
+section{
+ max-width:1100px;
+ margin:100px auto;
+ padding:40px;
+ background:rgba(255,255,255,.06);
+ border-radius:24px;
+ box-shadow:0 0 60px rgba(0,255,213,.15);
 }
 
-.navbar a{
-  color:#fff;
-  margin-right:15px;
-  text-decoration:none;
-}
-
-.navbar button{
-  margin-left:auto;
-  padding:8px 14px;
-  background:#00ff9c;
-  border:none;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.container{
-  padding-top:80px;
-  max-width:420px;
-  margin:auto;
-}
-
-.card{
-  background:#151a21;
-  padding:20px;
-  border-radius:10px;
-  margin-bottom:30px;
-}
-
-input,select,button{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border-radius:6px;
-  border:none;
-}
-
-button.action{
-  background:#00ff9c;
-  font-weight:bold;
+.footer{
+ position:fixed;bottom:0;width:100%;
+ text-align:center;padding:10px;
+ font-size:12px;color:#777;
+ background:rgba(0,0,0,.6);
 }
 </style>
-
-<!-- ETHERS -->
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 </head>
 
 <body>
-
-<!-- NAVBAR -->
-<div class="navbar">
-  <a href="#">Home</a>
-  <a href="#presale">Presale</a>
-  <a href="#staking">Staking</a>
-  <a href="#claim">Claim</a>
-  <a href="#tokenomics">Tokenomics</a>
-  <a href="#whitepaper">Whitepaper</a>
-  <button class="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+<div id="blackhole-bg">
+ <div class="stars"></div>
+ <div class="asteroids"></div>
+ <div class="blackhole"></div>
 </div>
 
-<div class="container">
+<nav>
+ <strong>ZILA</strong>
+ <div>
+  <a href="index.html">Home</a>
+  <a href="presale.html">Presale</a>
+  <a href="staking.html">Staking</a>
+  <a href="roadmap.html">Roadmap</a>
+  <a href="tokenomics.html">Tokenomics</a>
+  <a href="whitepaper.html">Whitepaper</a>
+ </div>
+</nav>
 
-<!-- PRESALE -->
-<div id="presale" class="card">
-  <h2>Presale</h2>
-  <input id="polAmount" placeholder="POL amount" oninput="calcZila()">
-  <p>You receive: <b><span id="zilaAmount">0</span> ZILA</b></p>
-  <button class="action" onclick="buyZila()">Buy ZILA</button>
-</div>
+<section>
+ <h1>ZILA Ecosystem</h1>
+ <p style="margin-top:20px">
+ Decentralized AI Infrastructure for Next Generation DeFi.
+ </p>
+</section>
 
-<!-- STAKING -->
-<div id="staking" class="card">
-  <h2>Staking</h2>
-
-  <select id="lock">
-    <option value="90">3 Months – 2% APR</option>
-    <option value="365">12 Months – 10% APR</option>
-  </select>
-
-  <input id="stakeAmount" placeholder="ZILA amount (min 10000)">
-  <button class="action" onclick="stakeZila()">Stake</button>
-</div>
-
-<!-- CLAIM -->
-<div id="claim" class="card">
-  <h2>Claim Rewards</h2>
-  <button class="action" onclick="claimRewards()">Claim</button>
-</div>
-
-</div>
-
-<!-- SCRIPT -->
-<script>
-let provider;
-let signer;
-let userAccount = null;
-
-// ===== CONNECT WALLET (FIX TOTAL) =====
-async function connectWallet(){
-  if(!window.ethereum){
-    alert("Install MetaMask / Trust Wallet");
-    return;
-  }
-
-  try{
-    const accounts = await window.ethereum.request({
-      method:"eth_requestAccounts"
-    });
-
-    await window.ethereum.request({
-      method:"wallet_switchEthereumChain",
-      params:[{chainId:"0x89"}] // Polygon
-    });
-
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    signer = provider.getSigner();
-    userAccount = accounts[0];
-
-    document.querySelectorAll(".connectBtn").forEach(btn=>{
-      btn.innerText = userAccount.slice(0,6)+"..."+userAccount.slice(-4);
-      btn.disabled = true;
-    });
-
-  }catch(err){
-    if(err.code===4001){
-      alert("Connection rejected");
-    }else{
-      alert("Wallet connection failed");
-    }
-  }
-}
-
-// ===== PRESALE =====
-const RATE = 1560;
-
-function calcZila(){
-  const pol = Number(document.getElementById("polAmount").value||0);
-  document.getElementById("zilaAmount").innerText = pol * RATE;
-}
-
-function buyZila(){
-  if(!userAccount) return alert("Connect wallet first");
-  alert("Presale tx will be sent via smart contract");
-}
-
-// ===== STAKING =====
-function stakeZila(){
-  if(!userAccount) return alert("Connect wallet first");
-
-  const amt = Number(document.getElementById("stakeAmount").value);
-  if(amt < 10000) return alert("Minimum staking is 10,000 ZILA");
-
-  alert("Staking tx will be sent");
-}
-
-// ===== CLAIM =====
-function claimRewards(){
-  if(!userAccount) return alert("Connect wallet first");
-  alert("Claim transaction sent");
-}
-</script>
-
+<div class="footer">© 2026 ZILA</div>
 </body>
 </html>
